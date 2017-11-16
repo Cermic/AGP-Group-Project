@@ -18,6 +18,51 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Game\Camera.h" />
+    <ClInclude Include="Game\cube.h" />
+    <ClInclude Include="Game\Game.h" />
+    <ClInclude Include="Game\HUD.h" />
+    <ClInclude Include="Game\Lights.h" />
+    <ClInclude Include="Game\SceneObjects.h" />
+    <ClInclude Include="Game\Skybox.h" />
+    <ClInclude Include="Game\Utilities\anorms.h" />
+    <ClInclude Include="Game\Utilities\rt3d.h" />
+    <ClInclude Include="Game\Utilities\rt3dObjLoader.h" />
+    <ClInclude Include="Game\Utilities\Utilities.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Assets\Fonts\Elementary_Gothic_Scaled.ttf" />
+    <Font Include="Assets\Fonts\MavenPro-Regular.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Shaders\cubemap.frag" />
+    <None Include="Assets\Shaders\cubemap.vert" />
+    <None Include="Assets\Shaders\lightmap.frag" />
+    <None Include="Assets\Shaders\lightmap.vert" />
+    <None Include="Assets\Shaders\phong-tex.frag" />
+    <None Include="Assets\Shaders\phong-tex.vert" />
+    <None Include="Assets\Shaders\textured.frag" />
+    <None Include="Assets\Shaders\textured.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\Textures\MetalBox.bmp" />
+    <Image Include="Assets\Textures\MetalBox2.bmp" />
+    <Image Include="Assets\Textures\MetalBox2LightMap.bmp" />
+    <Image Include="Assets\Textures\MetalBoxLightMapAdvanced.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Game\Camera.cpp" />
+    <ClCompile Include="Game\Game.cpp" />
+    <ClCompile Include="Game\HUD.cpp" />
+    <ClCompile Include="Game\Lights.cpp" />
+    <ClCompile Include="Game\SceneObjects.cpp" />
+    <ClCompile Include="Game\Skybox.cpp" />
+    <ClCompile Include="Game\Utilities\rt3d.cpp" />
+    <ClCompile Include="Game\Utilities\rt3dObjLoader.cpp" />
+    <ClCompile Include="Game\Utilities\Utilities.cpp" />
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{68E54CCF-C67F-4B26-9A1E-F92DEAE666C4}</ProjectGuid>
@@ -115,13 +160,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="rt3d.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="rt3d.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
