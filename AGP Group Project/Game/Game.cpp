@@ -16,10 +16,12 @@ Game::~Game()
 	delete[] keys;
 	delete[] nameWaterMark;
 	delete[] light;
+	delete[] light2;
 	delete[] skybox;
 	delete[] box1;
 	delete[] box2;
 	delete[] lightBox;
+	delete[] lightBox2;
 	delete[] util;
 }
 
@@ -39,7 +41,8 @@ void Game::initialise()
 	nameWaterMark = new HUD();
 	nameWaterMark->load();
 	// Light initialised
-	light = new Lights(vec4(-6.5f, 5.5f, 0.5f, 1.0f), 1.0f);
+	light = new Lights(0,vec4(-6.5f, 5.5f, 0.5f, 1.0f), 1.0f);
+	light2 = new Lights(2, vec4(-8.5f, 5.5f, 0.5f, 1.0f), 1.0f);
 	//Skybox initialised and loaded.
 	skybox = new Skybox();
 	skybox->load();
@@ -53,6 +56,7 @@ void Game::initialise()
 	box1 = new SceneObjects(vec3(-5.0f, 5.0f, -2.5f), vec3(1.0f, 1.0f, 1.0f),1.0f,"Assets/Textures/MetalBox.bmp","Assets/Textures/MetalBoxLightMapAdvanced.bmp");
 	box2 = new SceneObjects(vec3(-8.0f, 5.0f, -2.5f), vec3(1.0f,1.0f,1.0f), 1.0f, "Assets/Textures/MetalBox.bmp");
 	lightBox = new SceneObjects(light->getLightPos(), vec3(0.25f, 0.25f, 0.25f), "Assets/Textures/MetalBox.bmp");
+	lightBox2 = new SceneObjects(light2->getLightPos(), vec3(0.25f, 0.25f, 0.25f), "Assets/Textures/MetalBox.bmp");
 }
 
 // Draws all of the scene objects
@@ -79,13 +83,18 @@ void Game::render(SDL_Window * window)
 	// The scene objects decide which shader and light they will use in the scene so it does not matter where the light
 	// Is declared in the render portion of the program.
 	// Draws the light with lightmapping shader for the lightmapped box
-	light->draw(mvStack, util->getPhongTextureProgram(), util->getProjection(), light->getAttenuationConstant());
+	light->draw(0,mvStack, util->getPhongTextureProgram(), util->getProjection(), light->getAttenuationConstant()); // Right hand side light
+	light2->draw(2, mvStack, util->getPhongTextureProgram(), util->getProjection(), light2->getAttenuationConstant()); // Left hand side light
 	// Draws a box which is loaded with lightmapping, two textures can be affected by rotation, attenuation and specular shininess changes.
-	box1->draw(mvStack, util->getLightMapProgram(), util->getProjection(), true, box1->getTextureVisible(), box1->getSpecularValue(),box1->getRotation() + 0.1f, light->getLight()); // This is the lightmapped box
+	// Box1 is the box on the RIGHT
+	box1->draw(mvStack, util->getLightMapProgram(), util->getProjection(), true, box1->getTextureVisible(), box1->getSpecularValue(),box1->getRotation() + 0.1f, light->getLight(0)); // This is the lightmapped box
 	// Draws a box which is loaded with regular phong lighting, one texture and can be affected by rotation and attenuation changes.																								
-	box2->draw(mvStack, util->getPhongTextureProgram(), util->getProjection(), box2->getRotation() + 0.1f, light->getLight());
+	box2->drawWithTwoLights(mvStack, util->getPhong2LTextureProgram(), util->getProjection(), box2->getRotation() + 0.1f, light->getLight(0), light2->getLight(2));
+	// Box2 is the box on the LEFT
+	//box2->draw(mvStack, util->getPhongTextureProgram(), util->getProjection(), box2->getRotation() + 0.1f, light2->getLight(2));
 	// Draws a box around the light that simply follows it.
-	lightBox->draw(mvStack, util->getPhongTextureProgram(), util->getProjection());
+	lightBox->draw(mvStack, util->getPhongTextureProgram(), util->getProjection(),1.0f,light->getLight(0)); // Small box on the right
+	lightBox2->draw(mvStack, util->getPhongTextureProgram(), util->getProjection(), 1.0f, light->getLight(0)); // Small box on the left
 	// HUD drawn last so it renders on top.
 	hud->draw(mvStack, box1->getSpecularValue(), util->getShaderProgram());
 	keys->draw(mvStack, util->getShaderProgram());
@@ -101,9 +110,11 @@ void Game::update()
 	const Uint8 *keys = SDL_GetKeyboardState(NULL);
 
 	// Updates light attenuation.
-	light->update(light->getAttenuationConstant());
+	light->update(0,light->getAttenuationConstant());
+	light2->update(2, light2->getAttenuationConstant());
 	// Updates lightbox position based on the light
 	lightBox->update(light->getLightPos(), 1.0f);
+	lightBox2->update(light2->getLightPos(), 1.0f);
 	
 	// boxes position and rotation updated.
 	if (keys[SDL_SCANCODE_3])
@@ -162,31 +173,37 @@ void Game::update()
 	if (keys[SDL_SCANCODE_KP_8])
 	{
 		light->setLightPos(light->getLightPos() + vec4(0.0f, 0.1f, 0.0f, 0.0f));
+		light2->setLightPos(light2->getLightPos() + vec4(0.0f, 0.1f, 0.0f, 0.0f));
 	}
 	// Moves light down
 	if (keys[SDL_SCANCODE_KP_2])
 	{
 		light->setLightPos(light->getLightPos() - vec4(0.0f, 0.1f, 0.0f, 0.0f));
+		light2->setLightPos(light2->getLightPos() - vec4(0.0f, 0.1f, 0.0f, 0.0f));
 	}
 	// Moves light right
 	if (keys[SDL_SCANCODE_KP_6])
 	{
 		light->setLightPos(light->getLightPos() + vec4(0.1f, 0.0f, 0.0f, 0.0f));
+		light2->setLightPos(light2->getLightPos() + vec4(0.1f, 0.0f, 0.0f, 0.0f));
 	}
 	// Moves light left
 	if (keys[SDL_SCANCODE_KP_4])
 	{
 		light->setLightPos(light->getLightPos() - vec4(0.1f, 0.0f, 0.0f, 0.0f));
+		light2->setLightPos(light2->getLightPos() - vec4(0.1f, 0.0f, 0.0f, 0.0f));
 	}
 	// Moves light forward
 	if (keys[SDL_SCANCODE_KP_3])
 	{
 		light->setLightPos(light->getLightPos() + vec4(0.0f, 0.0f, 0.1f, 0.0f));
+		light2->setLightPos(light2->getLightPos() + vec4(0.0f, 0.0f, 0.1f, 0.0f));
 	}
 	// Moves light backward
 	if (keys[SDL_SCANCODE_KP_9])
 	{
 		light->setLightPos(light->getLightPos() - vec4(0.0f, 0.0f, 0.1f, 0.0f));
+		light2->setLightPos(light2->getLightPos() - vec4(0.0f, 0.0f, 0.1f, 0.0f));
 	}
 	// Draws scene in poly only mode - no textures
 	if (keys[SDL_SCANCODE_1]) {
@@ -219,6 +236,17 @@ void Game::update()
 		if (light->getAttenuationConstant() > 0.0f)
 		{
 			if (keys[SDL_SCANCODE_KP_MINUS]) light->setAttenuationConstant(light->getAttenuationConstant() - 0.01f);
+			// Decreases attenuation - thus increasing overall light through allowing it to travel further unattenuated.
+
+		}
+		if (light2->getAttenuationConstant() < 1.0f)
+		{
+			if (keys[SDL_SCANCODE_KP_PLUS]) light2->setAttenuationConstant(light2->getAttenuationConstant() + 0.01f);
+			// Increases attenuation - thus decreasing overall light through restricting it from traveling further unattenuated.
+		}
+		if (light2->getAttenuationConstant() > 0.0f)
+		{
+			if (keys[SDL_SCANCODE_KP_MINUS]) light2->setAttenuationConstant(light2->getAttenuationConstant() - 0.01f);
 			// Decreases attenuation - thus increasing overall light through allowing it to travel further unattenuated.
 
 		}

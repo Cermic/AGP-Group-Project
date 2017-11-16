@@ -21,6 +21,7 @@ private:
 	mat4 projection;
 	// declares the projection matrix
 	GLuint phongTextureProgram;
+	GLuint phong2LTextureProgram;
 	GLuint lightMapProgram;
 	GLuint uniformIndex;
 	// Creates a uniformIndex to be used for passing data to the shaders.
@@ -38,6 +39,7 @@ public:
 	mat4 getProjection() { return projection; }
 	void setProjection(mat4 proj) { projection = proj; }
 	GLuint getPhongTextureProgram() { return phongTextureProgram;}	
+	GLuint getPhong2LTextureProgram() { return phong2LTextureProgram; }
 	GLuint getLightMapProgram() { return lightMapProgram; }	
 	GLuint getUniformIndex() {return uniformIndex;}	
 	GLuint getCubeMapProgram() { return cubeMapProgram; }

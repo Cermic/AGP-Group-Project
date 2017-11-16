@@ -244,6 +244,66 @@ void SceneObjects::draw(stack<glm::mat4> passedStack, GLuint shaderProgram, mat4
 	mvStack.pop();
 }
 
+void SceneObjects::drawWithTwoLights(stack<glm::mat4> passedStack, GLuint shaderProgram, mat4 projectionMatrix, GLfloat rotation, rt3d::lightStruct light, rt3d::lightStruct light2)
+{
+	//Sets the object into the stack
+	stack<glm::mat4> mvStack = passedStack;
+	glUseProgram(shaderProgram); //use shader program for shading
+	rt3d::setUniformMatrix4fv(shaderProgram, "projection", glm::value_ptr(projectionMatrix));
+	glBindTexture(GL_TEXTURE_2D, texture);
+	mvStack.push(mvStack.top());
+	//Moves the cube to its desired position after it has been scaled
+	mvStack.top() = glm::translate(mvStack.top(), objectPos);
+	mvStack.top() = glm::rotate(mvStack.top(), float(rotation*DEG_TO_RADIAN), glm::vec3(-1.0f, 0.0f, 0.0f));
+	//Scales the cube after it is rotated
+	mvStack.top() = glm::scale(mvStack.top(), objectSize);
+	//Rotates the cube first
+	rt3d::setUniformMatrix4fv(shaderProgram, "modelview", glm::value_ptr(mvStack.top()));
+	rt3d::setLight(shaderProgram, light);
+	rt3d::setLight(shaderProgram, light2); // Passes both lights into shader?? - Will these two calls override each other or will they just both be passed into the shader?
+	rt3d::setMaterial(shaderProgram, material);
+	rt3d::drawIndexedMesh(meshObject, meshIndexCount, GL_TRIANGLES);
+	mvStack.pop();
+}
+
+void SceneObjects::drawWithTwoTexturesAndTwoLights(stack<glm::mat4> passedStack, GLuint shaderProgram, mat4 projectionMatrix, bool twoTextures, int textureVisible, int specularValue, GLfloat rotation, rt3d::lightStruct light, rt3d::lightStruct light2)
+{
+	stack<glm::mat4> mvStack = passedStack;
+	glUseProgram(shaderProgram); //use shader program for shading
+	rt3d::setUniformMatrix4fv(shaderProgram, "projection", glm::value_ptr(projectionMatrix));
+	if (twoTextures)
+	{
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, texture2);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		// For binding two textures
+	}
+	else
+	{
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		// For binding one texture
+	}
+	mvStack.push(mvStack.top());
+	//Moves the cube to its desired position after it has been scaled
+	mvStack.top() = glm::translate(mvStack.top(), objectPos);
+	mvStack.top() = glm::rotate(mvStack.top(), float(rotation*DEG_TO_RADIAN), glm::vec3(-1.0f, 0.0f, 0.0f));
+	//Scales the cube after it is rotated
+	mvStack.top() = glm::scale(mvStack.top(), objectSize);
+	//Rotates the cube first
+	rt3d::setUniformMatrix4fv(shaderProgram, "modelview", glm::value_ptr(mvStack.top()));
+	rt3d::setglUniform1i(shaderProgram, "textureVisible", textureVisible);
+	rt3d::setglUniform1i(shaderProgram, "specularValue", specularValue);
+	// Passes i_texture_isvisible and texel_specular_value value as uniforms into the shaders to 
+	// allow for them to manipulate the scene inside the shader
+	rt3d::setLight(shaderProgram, light);
+	rt3d::setLight(shaderProgram, light2);
+	rt3d::setMaterial(shaderProgram, material);
+	rt3d::drawIndexedMesh(meshObject, meshIndexCount, GL_TRIANGLES);
+	mvStack.pop();
+}
+
 // Texture mutator
 void SceneObjects::setTextures(char * textureName, char * textureName2)
 {

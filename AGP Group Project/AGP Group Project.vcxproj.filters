@@ -70,9 +70,6 @@
     <None Include="Assets\Shaders\lightmap.vert">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Assets\Shaders\phong-tex.frag">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="Assets\Shaders\phong-tex.vert">
       <Filter>Resource Files</Filter>
     </None>
@@ -80,6 +77,15 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Assets\Shaders\textured.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Assets\Shaders\phong-tex-2L.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Assets\Shaders\phong-tex.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Assets\Shaders\phong-tex-2L.vert">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

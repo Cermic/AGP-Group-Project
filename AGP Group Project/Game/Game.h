@@ -23,6 +23,7 @@ private:
 	SceneObjects *box1;
 	SceneObjects *box2;
 	SceneObjects *lightBox;
+	SceneObjects *lightBox2;
 	Utilities *util;
 	// All of the objects from other classes delcared for use in the scene.
 
