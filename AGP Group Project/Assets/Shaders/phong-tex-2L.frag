@@ -24,8 +24,11 @@ struct materialStruct
 
 };
 
-uniform lightStruct light;
-uniform lightStruct light2;
+const int numberOfLights = 2;
+lightStruct light[numberOfLights];
+
+uniform lightStruct light0;
+uniform lightStruct light1;
 uniform materialStruct material;
 uniform sampler2D textureUnit0;
 
@@ -38,34 +41,43 @@ layout(location = 0) out vec4 out_Color;
  
 void main(void) {
 
+	light[0] = light0;						   // Takes the uniforms from light0 and 1 and places them in the appropriate slot in the array.
+	light[1] = light1;
 
-	// Ambient intensity
-	vec4 ambientI = light2.ambient * material.ambient;			// For second light
-	ambientI = light.ambient * material.ambient;				// For first light
+	vec4 tmp_Colour[numberOfLights];           // Vec4 array to hold the colours that will be added together into litColour
+	vec4 litColour[numberOfLights];			   // Litcolour will hold to total colour
+	float specificAttenuation[numberOfLights]; // Captures the attenuation specific to the particular light being iterated through in the array.
 
-	// Diffuse intensity
-	vec4 diffuseI = light2.diffuse * material.diffuse;				// For second light
-	diffuseI = diffuseI * max(dot(normalize(ex_N),normalize(ex_L)),0);
+	vec4 totalLitColours; // Holds to total colour of all lights in the scene.
+	float totalAttenuation; // stores the total light attenuation in the scene.
 
-	diffuseI = light.diffuse * material.diffuse;					// For first light
-	diffuseI = diffuseI * max(dot(normalize(ex_N),normalize(ex_L)),0);
+	for (int i = 0; i < numberOfLights; i++)
+	{
+		// Ambient intensity
+		vec4 ambientI = light[i].ambient * material.ambient;
 
-	// Specular intensity
-	// Calculate R - reflection of light
-	vec3 R = normalize(reflect(normalize(-ex_L),normalize(ex_N)));
-	vec4 specularI = light2.specular * material.specular;				// For second light
-	specularI = specularI * pow(max(dot(R,ex_V),0), material.shininess);
+		// Diffuse intensity
+		vec4 diffuseI = light[i].diffuse * material.diffuse;				
+		diffuseI = diffuseI * max(dot(normalize(ex_N),normalize(ex_L)),0);
 
-	specularI = light.specular * material.specular;						// For first light
-	specularI = specularI * pow(max(dot(R,ex_V),0), material.shininess);
+		// Specular intensity
+		// Calculate R - reflection of light
+		vec3 R = normalize(reflect(normalize(-ex_L),normalize(ex_N)));
+		vec4 specularI = light[i].specular * material.specular;
+		specularI = specularI * pow(max(dot(R,ex_V),0), material.shininess);
+
+		// Attenuation Calculation
+		//specificAttenuation[i] = light[i].attConst + light[i].attLinear * ex_D + light[i].attQuadratic * ex_D * ex_D;
+		float attenuation = light[i].attConst + light[i].attLinear * ex_D + light[i].attQuadratic * ex_D * ex_D;
+
+		// Lit colout being calculated
+		tmp_Colour[i] = (diffuseI + specularI);
+		//attenuation does not affect ambient light
+		litColour[i] = ambientI + vec4((tmp_Colour[i].rgb / attenuation), 1.0);
+
+		totalLitColours += (litColour[i]/2);
+	}
 	
-
-	float attenuation = ((light.attLinear + light2.attLinear) + (light.attConst + light2.attConst)) * ex_D + (light.attQuadratic + light2.attQuadratic) * ex_D * ex_D;
-
-	vec4 tmp_Color = (diffuseI + specularI);
-	//attenuation does not affect ambient light
-	vec4 litColour = ambientI+vec4(tmp_Color.rgb /attenuation, 1.0);
-
 	// Fragment colour
-	out_Color = (litColour) * texture(textureUnit0, ex_TexCoord);
+	out_Color = (totalLitColours) * texture(textureUnit0, ex_TexCoord);
 }

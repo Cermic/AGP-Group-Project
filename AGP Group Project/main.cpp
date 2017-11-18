@@ -32,7 +32,7 @@ SDL_Window * setupRC(SDL_GLContext &context) {
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4); // Turn on x4 multisampling anti-aliasing (MSAA)
  
     // Create 1920x1080 window
-    window = SDL_CreateWindow("Light Mapping", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+    window = SDL_CreateWindow("AGP Group Project", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 		1280, 720, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
 	if (!window) // Check window was created OK
         rt3d::exitFatalError("Unable to create window");

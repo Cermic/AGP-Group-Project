@@ -100,11 +100,9 @@ void Utilities::loadUtilities()
 		// Projection setup.
 
 		phongTextureProgram = rt3d::initShaders("Assets/Shaders/phong-tex.vert", "Assets/Shaders/phong-tex.frag");
-		rt3d::setMaterial(phongTextureProgram, material0);
 		//Phong texture setup
 
 		phong2LTextureProgram = rt3d::initShaders("Assets/Shaders/phong-tex-2L.vert", "Assets/Shaders/phong-tex-2L.frag");
-		rt3d::setMaterial(phongTextureProgram, material0);
 		//Two Light Phong texture setup
 
 		lightMapProgram = rt3d::initShaders("Assets/Shaders/lightmap.vert", "Assets/Shaders/lightmap.frag");

@@ -59,8 +59,12 @@ public:
 	void draw(stack<glm::mat4> mvStack, GLuint shaderProgram, mat4 projectionMatrix, bool twoTextures, GLfloat rotation, rt3d::lightStruct light);
 	void draw(stack<glm::mat4> mvStack, GLuint shaderProgram, mat4 projectionMatrix, bool twoTextures, int textureVisible, int specularValue, GLfloat rotation, rt3d::lightStruct light);
 	//Boxes with rotation
+
+
 	void drawWithTwoLights(stack<glm::mat4> mvStack, GLuint shaderProgram, mat4 projectionMatrix, GLfloat rotation,
-						   rt3d::lightStruct light, rt3d::lightStruct light2);
+						   rt3d::lightStruct light0, rt3d::lightStruct light1);
+
+
 	void drawWithTwoTexturesAndTwoLights(stack<glm::mat4> mvStack, GLuint shaderProgram, mat4 projectionMatrix, bool twoTextures, 
 										int textureVisible, int specularValue, GLfloat rotation, 
 										rt3d::lightStruct light, rt3d::lightStruct light2);

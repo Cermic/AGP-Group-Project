@@ -244,7 +244,7 @@ void SceneObjects::draw(stack<glm::mat4> passedStack, GLuint shaderProgram, mat4
 	mvStack.pop();
 }
 
-void SceneObjects::drawWithTwoLights(stack<glm::mat4> passedStack, GLuint shaderProgram, mat4 projectionMatrix, GLfloat rotation, rt3d::lightStruct light, rt3d::lightStruct light2)
+void SceneObjects::drawWithTwoLights(stack<glm::mat4> passedStack, GLuint shaderProgram, mat4 projectionMatrix, GLfloat rotation, rt3d::lightStruct light0, rt3d::lightStruct light1)
 {
 	//Sets the object into the stack
 	stack<glm::mat4> mvStack = passedStack;
@@ -259,8 +259,7 @@ void SceneObjects::drawWithTwoLights(stack<glm::mat4> passedStack, GLuint shader
 	mvStack.top() = glm::scale(mvStack.top(), objectSize);
 	//Rotates the cube first
 	rt3d::setUniformMatrix4fv(shaderProgram, "modelview", glm::value_ptr(mvStack.top()));
-	rt3d::setLight(shaderProgram, light);
-	rt3d::setLight(shaderProgram, light2); // Passes both lights into shader?? - Will these two calls override each other or will they just both be passed into the shader?
+	rt3d::setTwoLights(shaderProgram, light0, light1);
 	rt3d::setMaterial(shaderProgram, material);
 	rt3d::drawIndexedMesh(meshObject, meshIndexCount, GL_TRIANGLES);
 	mvStack.pop();

@@ -17,8 +17,9 @@ private:
 	HUD *hud;
 	HUD *keys;
 	HUD *nameWaterMark;
-	Lights *light;
-	Lights *light2;
+	Lights *light0;
+	Lights *light1;
+	//Lights *lights[2];
 	Skybox *skybox;
 	SceneObjects *box1;
 	SceneObjects *box2;

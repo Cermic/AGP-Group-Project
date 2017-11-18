@@ -3,10 +3,14 @@
 // Calculates and passes on V, L, N vectors for use in fragment shader, phong2.frag
 #version 330
 
+
+const int numberOfLights = 2;
+vec4 lightPosition[numberOfLights];
+
 uniform mat4 modelview;
 uniform mat4 projection;
-uniform vec4 lightPosition;
-//uniform mat3 normalmatrix;
+uniform vec4 light0Position;
+uniform vec4 light1Position;
 
 layout(location = 0) in vec3 in_Position;
 layout(location = 1) in vec3 in_Color;
@@ -26,26 +30,32 @@ out float ex_D;
 // and find V, L, N vectors for the fragment shader
 void main(void) {
 
-	// vertex into eye coordinates
-	vec4 vertexPosition = modelview * vec4(in_Position,1.0);
+	lightPosition[0] = light0Position;
+	lightPosition[1] = light1Position;
 
-	// Find V - in eye coordinates, eye is at (0,0,0)
-	ex_V = normalize(-vertexPosition).xyz;
+	for(int i = 0; i < numberOfLights; i++)
+	{
+		// vertex into eye coordinates
+		vec4 vertexPosition = modelview * vec4(in_Position,1.0);
 
-	// surface normal in eye coordinates
-	// taking the rotation part of the modelview matrix to generate the normal matrix
-	// (if scaling is includes, should use transpose inverse modelview matrix!)
-	// this is somewhat wasteful in compute time and should really be part of the cpu program,
-	// giving an additional uniform input
-	mat3 normalmatrix = transpose(inverse(mat3(modelview)));
-	ex_N = normalize(normalmatrix * in_Normal);
+		// Find V - in eye coordinates, eye is at (0,0,0)
+		ex_V = normalize(-vertexPosition).xyz;
 
-	// L - to light source from vertex
-	ex_L = normalize(lightPosition.xyz - vertexPosition.xyz);
+		// surface normal in eye coordinates
+		// taking the rotation part of the modelview matrix to generate the normal matrix
+		// (if scaling is includes, should use transpose inverse modelview matrix!)
+		// this is somewhat wasteful in compute time and should really be part of the cpu program,
+		// giving an additional uniform input
+		mat3 normalmatrix = transpose(inverse(mat3(modelview)));
+		ex_N = normalize(normalmatrix * in_Normal);
 
-	ex_TexCoord = in_TexCoord;
+		// L - to light source from vertex
+		ex_L = normalize(lightPosition[i].xyz - vertexPosition.xyz);
 
-    gl_Position = projection * vertexPosition;
+		ex_TexCoord = in_TexCoord;
+
+		gl_Position = projection * vertexPosition;
 	
-	ex_D = distance(vertexPosition,lightPosition);
+		ex_D = distance(vertexPosition, lightPosition[i]);
+	}
 }

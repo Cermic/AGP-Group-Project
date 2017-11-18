@@ -256,6 +256,77 @@ void setLight(const GLuint program, const lightStruct light) {
 
 }
 
+void setTwoLights(const GLuint program, const lightStruct light0, const lightStruct light1)
+{
+	/*lightStruct light[2];
+	light[0] = light0;
+	light[1] = light1;*/
+
+	// pass in light data to shader
+	int uniformIndex = glGetUniformLocation(program, "light0.ambient");
+	glUniform4fv(uniformIndex, 1, light0.ambient);
+	uniformIndex = glGetUniformLocation(program, "light0.diffuse");
+	glUniform4fv(uniformIndex, 1, light0.diffuse);
+	uniformIndex = glGetUniformLocation(program, "light0.specular");
+	glUniform4fv(uniformIndex, 1, light0.specular);
+	uniformIndex = glGetUniformLocation(program, "light0Position"); // Note this is not a . here! - used in the vertex shader only
+	glUniform4fv(uniformIndex, 1, light0.position);
+
+	uniformIndex = glGetUniformLocation(program, "light0.attConst");
+	glUniform1f(uniformIndex, light0.attConst);
+	uniformIndex = glGetUniformLocation(program, "light0.attLinear");
+	glUniform1f(uniformIndex, light0.attLinear);
+	uniformIndex = glGetUniformLocation(program, "light0.attQuadratic");
+	glUniform1f(uniformIndex, light0.attQuadratic);
+	// First light passed
+
+
+	uniformIndex = glGetUniformLocation(program, "light1.ambient");
+	glUniform4fv(uniformIndex, 1, light1.ambient);
+	uniformIndex = glGetUniformLocation(program, "light1.diffuse");
+	glUniform4fv(uniformIndex, 1, light1.diffuse);
+	uniformIndex = glGetUniformLocation(program, "light1.specular");
+	glUniform4fv(uniformIndex, 1, light1.specular);
+	uniformIndex = glGetUniformLocation(program, "light1Position");  // Note this is not a . here! - used in the vertex shader only
+	glUniform4fv(uniformIndex, 1, light1.position);
+
+	uniformIndex = glGetUniformLocation(program, "light1.attConst");
+	glUniform1f(uniformIndex, light1.attConst);
+	uniformIndex = glGetUniformLocation(program, "light1.attLinear");
+	glUniform1f(uniformIndex, light1.attLinear);
+	uniformIndex = glGetUniformLocation(program, "light1.attQuadratic");
+	glUniform1f(uniformIndex, light1.attQuadratic);
+	// Second light passed.
+
+	//for (int i = 0; i++; i < 2)
+	//{
+		// code for looping the passes.
+	//}
+}
+
+//void setMultipleLights(const GLuint program, const lightStruct lights[], int numberOfLights)
+//{
+//	for (int i = 0; i < numberOfLights; i++)
+//	{
+//		// pass in light data to shader
+//		int uniformIndex = glGetUniformLocation(program, "lights[" + i.c_str() + "].ambient");
+//		glUniform4fv(uniformIndex, 1, lights[i].ambient);
+//		uniformIndex = glGetUniformLocation(program, "lights[i].diffuse");
+//		glUniform4fv(uniformIndex, 1, lights[i].diffuse);
+//		uniformIndex = glGetUniformLocation(program, "lights[i].specular");
+//		glUniform4fv(uniformIndex, 1, lights[i].specular);
+//		uniformIndex = glGetUniformLocation(program, "lights[i].position");
+//		glUniform4fv(uniformIndex, 1, lights[i].position);
+//
+//		uniformIndex = glGetUniformLocation(program, "lights[i].attConst");
+//		glUniform1f(uniformIndex, lights[i].attConst);
+//		uniformIndex = glGetUniformLocation(program, "lights[i].attLinear");
+//		glUniform1f(uniformIndex, lights[i].attLinear);
+//		uniformIndex = glGetUniformLocation(program, "lights[i].attQuadratic");
+//		glUniform1f(uniformIndex, lights[i].attQuadratic);
+//	}
+//}
+
 
 void setMaterial(const GLuint program, const materialStruct material) {
 	// pass in material data to shader 

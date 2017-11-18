@@ -51,6 +51,7 @@ namespace rt3d {
 	void setglUniform1i(GLuint program, const char* uniformName, int data);
 	
 	void setLight(const GLuint program, const lightStruct light);
+	void setTwoLights(const GLuint program, const lightStruct light0, const lightStruct light1);
 	void setLightPos(const GLuint program, const GLfloat *lightPos);
 	void setMaterial(const GLuint program, const materialStruct material);
 

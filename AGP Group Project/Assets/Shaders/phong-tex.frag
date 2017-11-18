@@ -4,7 +4,8 @@
 // Some drivers require the following
 precision highp float;
 
-struct lightStruct
+// This is just the definition of the lightStruct so that lightStructs that are passed in know what they are composed of.
+struct lightStruct 
 {
 	vec4 ambient;
 	vec4 diffuse;
@@ -56,7 +57,7 @@ void main(void) {
 
 	vec4 tmp_Color = (diffuseI + specularI);
 	//attenuation does not affect ambient light
-	vec4 litColour = ambientI+vec4(tmp_Color.rgb /attenuation, 1.0);
+	vec4 litColour = ambientI + vec4((tmp_Color.rgb / attenuation), 1.0);
 
 	// Fragment colour
 	out_Color = (litColour) * texture(textureUnit0, ex_TexCoord);

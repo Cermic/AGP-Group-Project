@@ -15,8 +15,11 @@ Game::~Game()
 	delete[] hud;
 	delete[] keys;
 	delete[] nameWaterMark;
-	delete[] light;
-	delete[] light2;
+	delete[] light0;
+	delete[] light1;
+	//delete[] light0;
+	//delete[] light1;
+	//delete[] lights;
 	delete[] skybox;
 	delete[] box1;
 	delete[] box2;
@@ -41,8 +44,11 @@ void Game::initialise()
 	nameWaterMark = new HUD();
 	nameWaterMark->load();
 	// Light initialised
-	light = new Lights(0,vec4(-6.5f, 5.5f, 0.5f, 1.0f), 1.0f);
-	light2 = new Lights(2, vec4(-8.5f, 5.5f, 0.5f, 1.0f), 1.0f);
+	//light0 = new Lights(vec4(-6.0f, 5.5f, 0.5f, 1.0f), 1.0f);
+	//light1 = new Lights(vec4(-9.0f, 5.5f, 0.5f, 1.0f), 1.0f);
+
+	light0 = new Lights(vec4(-6.0f, 5.5f, 0.5f, 1.0f), 1.0f);
+	light1 = new Lights(vec4(-9.0f, 5.5f, 0.5f, 1.0f), 1.0f);
 	//Skybox initialised and loaded.
 	skybox = new Skybox();
 	skybox->load();
@@ -55,8 +61,9 @@ void Game::initialise()
 	// Sceneobjects loaded
 	box1 = new SceneObjects(vec3(-5.0f, 5.0f, -2.5f), vec3(1.0f, 1.0f, 1.0f),1.0f,"Assets/Textures/MetalBox.bmp","Assets/Textures/MetalBoxLightMapAdvanced.bmp");
 	box2 = new SceneObjects(vec3(-8.0f, 5.0f, -2.5f), vec3(1.0f,1.0f,1.0f), 1.0f, "Assets/Textures/MetalBox.bmp");
-	lightBox = new SceneObjects(light->getLightPos(), vec3(0.25f, 0.25f, 0.25f), "Assets/Textures/MetalBox.bmp");
-	lightBox2 = new SceneObjects(light2->getLightPos(), vec3(0.25f, 0.25f, 0.25f), "Assets/Textures/MetalBox.bmp");
+
+	lightBox = new SceneObjects(light0->getLightPos(), vec3(0.25f, 0.25f, 0.25f), "Assets/Textures/MetalBox.bmp");
+	lightBox2 = new SceneObjects(light1->getLightPos(), vec3(0.25f, 0.25f, 0.25f), "Assets/Textures/MetalBox.bmp");
 }
 
 // Draws all of the scene objects
@@ -83,22 +90,25 @@ void Game::render(SDL_Window * window)
 	// The scene objects decide which shader and light they will use in the scene so it does not matter where the light
 	// Is declared in the render portion of the program.
 	// Draws the light with lightmapping shader for the lightmapped box
-	light->draw(0,mvStack, util->getPhongTextureProgram(), util->getProjection(), light->getAttenuationConstant()); // Right hand side light
-	light2->draw(2, mvStack, util->getPhongTextureProgram(), util->getProjection(), light2->getAttenuationConstant()); // Left hand side light
+	//light0->draw(mvStack, util->getPhongTextureProgram(), util->getProjection(), light0->getAttenuationConstant()); // Right hand side light
+	//light1->draw(mvStack, util->getPhongTextureProgram(), util->getProjection(), light1->getAttenuationConstant()); // Left hand side light
+
+	light0->draw(mvStack, util->getPhongTextureProgram(), util->getProjection(), light0->getAttenuationConstant()); // Right hand side light
+	light1->draw(mvStack, util->getPhongTextureProgram(), util->getProjection(), light1->getAttenuationConstant()); // Left hand side light
 	// Draws a box which is loaded with lightmapping, two textures can be affected by rotation, attenuation and specular shininess changes.
 	// Box1 is the box on the RIGHT
-	box1->draw(mvStack, util->getLightMapProgram(), util->getProjection(), true, box1->getTextureVisible(), box1->getSpecularValue(),box1->getRotation() + 0.1f, light->getLight(0)); // This is the lightmapped box
+	box1->draw(mvStack, util->getLightMapProgram(), util->getProjection(), true, box1->getTextureVisible(), box1->getSpecularValue(),box1->getRotation() + 0.1f, light1->getLight()); // This is the lightmapped box
 	// Draws a box which is loaded with regular phong lighting, one texture and can be affected by rotation and attenuation changes.																								
-	box2->drawWithTwoLights(mvStack, util->getPhong2LTextureProgram(), util->getProjection(), box2->getRotation() + 0.1f, light->getLight(0), light2->getLight(2));
 	// Box2 is the box on the LEFT
-	//box2->draw(mvStack, util->getPhongTextureProgram(), util->getProjection(), box2->getRotation() + 0.1f, light2->getLight(2));
+	//box2->draw(mvStack, util->getPhongTextureProgram(), util->getProjection(), box2->getRotation() + 0.1f, light1->getLight());
+	box2->drawWithTwoLights(mvStack, util->getPhong2LTextureProgram(), util->getProjection(), box2->getRotation() + 0.1f, light0->getLight(), light1->getLight());
 	// Draws a box around the light that simply follows it.
-	lightBox->draw(mvStack, util->getPhongTextureProgram(), util->getProjection(),1.0f,light->getLight(0)); // Small box on the right
-	lightBox2->draw(mvStack, util->getPhongTextureProgram(), util->getProjection(), 1.0f, light->getLight(0)); // Small box on the left
+	lightBox->draw(mvStack, util->getPhongTextureProgram(), util->getProjection(),1.0f,light0->getLight()); // Small box on the right
+	lightBox2->draw(mvStack, util->getPhongTextureProgram(), util->getProjection(), 1.0f, light0->getLight()); // Small box on the left
 	// HUD drawn last so it renders on top.
-	hud->draw(mvStack, box1->getSpecularValue(), util->getShaderProgram());
-	keys->draw(mvStack, util->getShaderProgram());
-	nameWaterMark->draw(mvStack, util->getShaderProgram(), 9, vec3(0.8, 0.9, 0.0), vec3(0.2, 0.1, 0.0), { 255,255,255 });
+	//hud->draw(mvStack, box1->getSpecularValue(), util->getShaderProgram());
+	//keys->draw(mvStack, util->getShaderProgram());
+	//nameWaterMark->draw(mvStack, util->getShaderProgram(), 9, vec3(0.8, 0.9, 0.0), vec3(0.2, 0.1, 0.0), { 255,255,255 });
 	mvStack.pop();
 	glDepthMask(GL_TRUE);				
 	SDL_GL_SwapWindow(window); // swap buffers
@@ -110,11 +120,11 @@ void Game::update()
 	const Uint8 *keys = SDL_GetKeyboardState(NULL);
 
 	// Updates light attenuation.
-	light->update(0,light->getAttenuationConstant());
-	light2->update(2, light2->getAttenuationConstant());
+	light0->update(light0->getAttenuationConstant());
+	light1->update(light1->getAttenuationConstant());
 	// Updates lightbox position based on the light
-	lightBox->update(light->getLightPos(), 1.0f);
-	lightBox2->update(light2->getLightPos(), 1.0f);
+	lightBox->update(light0->getLightPos(), 1.0f);
+	lightBox2->update(light1->getLightPos(), 1.0f);
 	
 	// boxes position and rotation updated.
 	if (keys[SDL_SCANCODE_3])
@@ -172,38 +182,38 @@ void Game::update()
 	// Moves light up
 	if (keys[SDL_SCANCODE_KP_8])
 	{
-		light->setLightPos(light->getLightPos() + vec4(0.0f, 0.1f, 0.0f, 0.0f));
-		light2->setLightPos(light2->getLightPos() + vec4(0.0f, 0.1f, 0.0f, 0.0f));
+		light0->setLightPos(light0->getLightPos() + vec4(0.0f, 0.1f, 0.0f, 0.0f));
+		light1->setLightPos(light1->getLightPos() + vec4(0.0f, 0.1f, 0.0f, 0.0f));
 	}
 	// Moves light down
 	if (keys[SDL_SCANCODE_KP_2])
 	{
-		light->setLightPos(light->getLightPos() - vec4(0.0f, 0.1f, 0.0f, 0.0f));
-		light2->setLightPos(light2->getLightPos() - vec4(0.0f, 0.1f, 0.0f, 0.0f));
+		light0->setLightPos(light0->getLightPos() - vec4(0.0f, 0.1f, 0.0f, 0.0f));
+		light1->setLightPos(light1->getLightPos() - vec4(0.0f, 0.1f, 0.0f, 0.0f));
 	}
 	// Moves light right
 	if (keys[SDL_SCANCODE_KP_6])
 	{
-		light->setLightPos(light->getLightPos() + vec4(0.1f, 0.0f, 0.0f, 0.0f));
-		light2->setLightPos(light2->getLightPos() + vec4(0.1f, 0.0f, 0.0f, 0.0f));
+		light0->setLightPos(light0->getLightPos() + vec4(0.1f, 0.0f, 0.0f, 0.0f));
+		light1->setLightPos(light1->getLightPos() + vec4(0.1f, 0.0f, 0.0f, 0.0f));
 	}
 	// Moves light left
 	if (keys[SDL_SCANCODE_KP_4])
 	{
-		light->setLightPos(light->getLightPos() - vec4(0.1f, 0.0f, 0.0f, 0.0f));
-		light2->setLightPos(light2->getLightPos() - vec4(0.1f, 0.0f, 0.0f, 0.0f));
+		light0->setLightPos(light0->getLightPos() - vec4(0.1f, 0.0f, 0.0f, 0.0f));
+		light1->setLightPos(light1->getLightPos() - vec4(0.1f, 0.0f, 0.0f, 0.0f));
 	}
 	// Moves light forward
 	if (keys[SDL_SCANCODE_KP_3])
 	{
-		light->setLightPos(light->getLightPos() + vec4(0.0f, 0.0f, 0.1f, 0.0f));
-		light2->setLightPos(light2->getLightPos() + vec4(0.0f, 0.0f, 0.1f, 0.0f));
+		light0->setLightPos(light0->getLightPos() + vec4(0.0f, 0.0f, 0.1f, 0.0f));
+		light1->setLightPos(light1->getLightPos() + vec4(0.0f, 0.0f, 0.1f, 0.0f));
 	}
 	// Moves light backward
 	if (keys[SDL_SCANCODE_KP_9])
 	{
-		light->setLightPos(light->getLightPos() - vec4(0.0f, 0.0f, 0.1f, 0.0f));
-		light2->setLightPos(light2->getLightPos() - vec4(0.0f, 0.0f, 0.1f, 0.0f));
+		light0->setLightPos(light0->getLightPos() - vec4(0.0f, 0.0f, 0.1f, 0.0f));
+		light1->setLightPos(light1->getLightPos() - vec4(0.0f, 0.0f, 0.1f, 0.0f));
 	}
 	// Draws scene in poly only mode - no textures
 	if (keys[SDL_SCANCODE_1]) {
@@ -228,25 +238,25 @@ void Game::update()
 	// Allows attenuation changes
 	{
 		//Attenutation User Control:
-		if (light->getAttenuationConstant() < 1.0f)
+		if (light0->getAttenuationConstant() < 1.0f)
 		{
-			if (keys[SDL_SCANCODE_KP_PLUS]) light->setAttenuationConstant(light->getAttenuationConstant() + 0.01f);
+			if (keys[SDL_SCANCODE_KP_PLUS]) light0->setAttenuationConstant(light0->getAttenuationConstant() + 0.1f);
 			// Increases attenuation - thus decreasing overall light through restricting it from traveling further unattenuated.
 		}
-		if (light->getAttenuationConstant() > 0.0f)
+		if (light0->getAttenuationConstant() > 0.0f)
 		{
-			if (keys[SDL_SCANCODE_KP_MINUS]) light->setAttenuationConstant(light->getAttenuationConstant() - 0.01f);
+			if (keys[SDL_SCANCODE_KP_MINUS]) light0->setAttenuationConstant(light0->getAttenuationConstant() - 0.1f);
 			// Decreases attenuation - thus increasing overall light through allowing it to travel further unattenuated.
 
 		}
-		if (light2->getAttenuationConstant() < 1.0f)
+		if (light1->getAttenuationConstant() < 1.0f)
 		{
-			if (keys[SDL_SCANCODE_KP_PLUS]) light2->setAttenuationConstant(light2->getAttenuationConstant() + 0.01f);
+			if (keys[SDL_SCANCODE_KP_PLUS]) light1->setAttenuationConstant(light1->getAttenuationConstant() + 0.1f);
 			// Increases attenuation - thus decreasing overall light through restricting it from traveling further unattenuated.
 		}
-		if (light2->getAttenuationConstant() > 0.0f)
+		if (light1->getAttenuationConstant() > 0.0f)
 		{
-			if (keys[SDL_SCANCODE_KP_MINUS]) light2->setAttenuationConstant(light2->getAttenuationConstant() - 0.01f);
+			if (keys[SDL_SCANCODE_KP_MINUS]) light1->setAttenuationConstant(light1->getAttenuationConstant() - 0.1f);
 			// Decreases attenuation - thus increasing overall light through allowing it to travel further unattenuated.
 
 		}
