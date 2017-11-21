@@ -107,7 +107,6 @@ void Utilities::loadUtilities()
 
 		lightMapProgram = rt3d::initShaders("Assets/Shaders/lightmap.vert", "Assets/Shaders/lightmap.frag");
 		//Setting up lightMapProgram
-
 		uniformIndex = glGetUniformLocation(lightMapProgram, "textureUnit1");
 		// UniformIndex is the command that passes to the Shaders. //
 		glUniform1i(uniformIndex, 1);
@@ -115,9 +114,17 @@ void Utilities::loadUtilities()
 		glUniform1i(uniformIndex, 0);
 		// Lightmap shader setup
 
+		lightMap2LProgram = rt3d::initShaders("Assets/Shaders/lightmap2L.vert", "Assets/Shaders/lightmap2L.frag");
+		//Setting up lightMapProgram
+		uniformIndex = glGetUniformLocation(lightMap2LProgram, "textureUnit1");
+		// UniformIndex is the command that passes to the Shaders. //
+		glUniform1i(uniformIndex, 1);
+		uniformIndex = glGetUniformLocation(lightMap2LProgram, "textureUnit0");
+		glUniform1i(uniformIndex, 0);
+		// Lightmap shader setup
+
 		//Shaders loaded for the cubemap
 		cubeMapProgram = rt3d::initShaders("Assets/Shaders/cubemap.vert", "Assets/Shaders/cubemap.frag");
-		rt3d::setMaterial(cubeMapProgram, material0);
 		// Cubemap setup
 
 		shaderProgram = rt3d::initShaders("Assets/Shaders/textured.vert", "Assets/Shaders/textured.frag");

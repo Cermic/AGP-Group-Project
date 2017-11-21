@@ -1,8 +1,7 @@
-// phong-tex2L.vert
+// phong-tex.vert
 // Vertex shader for use with a Phong or other reflection model fragment shader
-// Calculates and passes on V, L, N vectors for use in fragment shader, phong2L.frag
+// Calculates and passes on V, L, N vectors for use in fragment shader, phong2.frag
 #version 330
-
 
 const int numberOfLights = 2;
 vec4 lightPosition[numberOfLights];
@@ -41,7 +40,7 @@ void main(void) {
 		// Find V, eye is at (0,0,0)
 		vertex_In_Eye_Coordinates = normalize(-vertexPosition).xyz;
 
-		// N - surface normal in eye coordinates
+		// surface normal in eye coordinates
 		// taking the rotation part of the modelview matrix to generate the normal matrix
 		// (if scaling is includes, should use transpose inverse modelview matrix!)
 		// this is somewhat wasteful in compute time and should really be part of the cpu program,

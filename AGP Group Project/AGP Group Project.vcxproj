@@ -40,6 +40,8 @@
     <None Include="Assets\Shaders\cubemap.vert" />
     <None Include="Assets\Shaders\lightmap.frag" />
     <None Include="Assets\Shaders\lightmap.vert" />
+    <None Include="Assets\Shaders\lightmap2L.frag" />
+    <None Include="Assets\Shaders\lightmap2L.vert" />
     <None Include="Assets\Shaders\phong-tex-2L.frag" />
     <None Include="Assets\Shaders\phong-tex-2L.vert" />
     <None Include="Assets\Shaders\phong-tex.frag" />

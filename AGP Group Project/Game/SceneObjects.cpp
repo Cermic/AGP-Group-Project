@@ -265,7 +265,7 @@ void SceneObjects::drawWithTwoLights(stack<glm::mat4> passedStack, GLuint shader
 	mvStack.pop();
 }
 
-void SceneObjects::drawWithTwoTexturesAndTwoLights(stack<glm::mat4> passedStack, GLuint shaderProgram, mat4 projectionMatrix, bool twoTextures, int textureVisible, int specularValue, GLfloat rotation, rt3d::lightStruct light, rt3d::lightStruct light2)
+void SceneObjects::drawWithTwoTexturesAndTwoLights(stack<glm::mat4> passedStack, GLuint shaderProgram, mat4 projectionMatrix, bool twoTextures, int textureVisible, int specularValue, GLfloat rotation, rt3d::lightStruct light0, rt3d::lightStruct light1)
 {
 	stack<glm::mat4> mvStack = passedStack;
 	glUseProgram(shaderProgram); //use shader program for shading
@@ -296,8 +296,7 @@ void SceneObjects::drawWithTwoTexturesAndTwoLights(stack<glm::mat4> passedStack,
 	rt3d::setglUniform1i(shaderProgram, "specularValue", specularValue);
 	// Passes i_texture_isvisible and texel_specular_value value as uniforms into the shaders to 
 	// allow for them to manipulate the scene inside the shader
-	rt3d::setLight(shaderProgram, light);
-	rt3d::setLight(shaderProgram, light2);
+	rt3d::setTwoLights(shaderProgram, light0, light1);
 	rt3d::setMaterial(shaderProgram, material);
 	rt3d::drawIndexedMesh(meshObject, meshIndexCount, GL_TRIANGLES);
 	mvStack.pop();

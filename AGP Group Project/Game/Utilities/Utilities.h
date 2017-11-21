@@ -23,6 +23,7 @@ private:
 	GLuint phongTextureProgram;
 	GLuint phong2LTextureProgram;
 	GLuint lightMapProgram;
+	GLuint lightMap2LProgram;
 	GLuint uniformIndex;
 	// Creates a uniformIndex to be used for passing data to the shaders.
 	GLuint cubeMapProgram;
@@ -41,6 +42,7 @@ public:
 	GLuint getPhongTextureProgram() { return phongTextureProgram;}	
 	GLuint getPhong2LTextureProgram() { return phong2LTextureProgram; }
 	GLuint getLightMapProgram() { return lightMapProgram; }	
+	GLuint getLightMap2LProgram() { return lightMap2LProgram; }
 	GLuint getUniformIndex() {return uniformIndex;}	
 	GLuint getCubeMapProgram() { return cubeMapProgram; }
 	GLuint getShaderProgram() { return shaderProgram; }

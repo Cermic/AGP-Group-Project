@@ -26,17 +26,17 @@ struct materialStruct
 
 const int numberOfLights = 2;
 lightStruct light[numberOfLights];
-
 uniform lightStruct light0;
 uniform lightStruct light1;
+
 uniform materialStruct material;
 uniform sampler2D textureUnit0;
 
-in vec3 ex_N;
-in vec3 ex_V;
-in vec3 ex_L;
+in vec3 surface_Normal_To_Eye_From_Vertex;
+in vec3 vertex_In_Eye_Coordinates;
+in vec3 surface_Normal_To_Light_From_Vertex[numberOfLights];
 in vec2 ex_TexCoord;
-in float ex_D;
+in float dist_From_Vertex_To_Light[numberOfLights];
 layout(location = 0) out vec4 out_Color;
  
 void main(void) {
@@ -48,8 +48,7 @@ void main(void) {
 	vec4 litColour[numberOfLights];			   // Litcolour will hold to total colour
 	float specificAttenuation[numberOfLights]; // Captures the attenuation specific to the particular light being iterated through in the array.
 
-	vec4 totalLitColours; // Holds to total colour of all lights in the scene.
-	float totalAttenuation; // stores the total light attenuation in the scene.
+	vec4 totalLitColours=vec4(0.0f,0.0f,0.0f,0.0f); // Holds to total colour of all lights in the scene.
 
 	for (int i = 0; i < numberOfLights; i++)
 	{
@@ -58,17 +57,19 @@ void main(void) {
 
 		// Diffuse intensity
 		vec4 diffuseI = light[i].diffuse * material.diffuse;				
-		diffuseI = diffuseI * max(dot(normalize(ex_N),normalize(ex_L)),0);
+		diffuseI = diffuseI * max(dot(normalize(surface_Normal_To_Eye_From_Vertex),
+		normalize(surface_Normal_To_Light_From_Vertex[i])),0);
 
 		// Specular intensity
 		// Calculate R - reflection of light
-		vec3 R = normalize(reflect(normalize(-ex_L),normalize(ex_N)));
+		vec3 R = normalize(reflect(normalize(-surface_Normal_To_Light_From_Vertex[i]),
+		normalize(surface_Normal_To_Eye_From_Vertex)));
 		vec4 specularI = light[i].specular * material.specular;
-		specularI = specularI * pow(max(dot(R,ex_V),0), material.shininess);
+		specularI = specularI * pow(max(dot(R,vertex_In_Eye_Coordinates),0), material.shininess);
 
 		// Attenuation Calculation
-		//specificAttenuation[i] = light[i].attConst + light[i].attLinear * ex_D + light[i].attQuadratic * ex_D * ex_D;
-		float attenuation = light[i].attConst + light[i].attLinear * ex_D + light[i].attQuadratic * ex_D * ex_D;
+		float attenuation = light[i].attConst + light[i].attLinear * dist_From_Vertex_To_Light[i] + 
+		light[i].attQuadratic * dist_From_Vertex_To_Light[i] * dist_From_Vertex_To_Light[i];
 
 		// Lit colout being calculated
 		tmp_Colour[i] = (diffuseI + specularI);
