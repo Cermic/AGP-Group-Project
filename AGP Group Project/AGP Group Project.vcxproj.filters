@@ -48,6 +48,9 @@
     <ClInclude Include="Game\Utilities\anorms.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Game\Utilities\AABB.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Font Include="Assets\Fonts\Elementary_Gothic_Scaled.ttf">
@@ -138,6 +141,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Utilities\AABB.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

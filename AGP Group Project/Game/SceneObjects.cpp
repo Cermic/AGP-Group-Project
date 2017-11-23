@@ -15,6 +15,7 @@ SceneObjects::SceneObjects(vec3 objectPosition, vec3 objectScale, char * texture
 	objectPos = objectPosition;
 	objectSize = objectScale; //scale of the object can be specified.
 	texture = util.loadBitmap(textureName);
+	aabb = CPM_GLM_AABB_NS::AABB(vec3((objectPosition - objectScale.x), (objectPosition + objectScale.y), (objectPosition + objectScale.z)), vec3((objectPosition + objectScale.x), (objectPosition - objectScale.y), (objectPosition - objectScale.z)));
 	vector<GLfloat> verts;
 	vector<GLfloat> norms;
 	vector<GLfloat> tex_coords;

@@ -22,7 +22,7 @@ private:
 public:
 	Camera(vec3 eye, vec3 at, vec3 up, GLfloat rotation) :eye(eye), at(at), up(up),rotation(rotation) {};
 	//Camera Constructor
-	vec3 getEye() { return eye; }
+	vec3 getEyePos() { return eye; }
 	vec3 getAt() { return at; }
 	vec3 getUp() { return up; }
 	GLfloat getRotation() { return rotation; }

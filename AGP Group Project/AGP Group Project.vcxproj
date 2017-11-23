@@ -26,6 +26,7 @@
     <ClInclude Include="Game\Lights.h" />
     <ClInclude Include="Game\SceneObjects.h" />
     <ClInclude Include="Game\Skybox.h" />
+    <ClInclude Include="Game\Utilities\AABB.hpp" />
     <ClInclude Include="Game\Utilities\anorms.h" />
     <ClInclude Include="Game\Utilities\rt3d.h" />
     <ClInclude Include="Game\Utilities\rt3dObjLoader.h" />
@@ -62,6 +63,7 @@
     <ClCompile Include="Game\Lights.cpp" />
     <ClCompile Include="Game\SceneObjects.cpp" />
     <ClCompile Include="Game\Skybox.cpp" />
+    <ClCompile Include="Game\Utilities\AABB.cpp" />
     <ClCompile Include="Game\Utilities\rt3d.cpp" />
     <ClCompile Include="Game\Utilities\rt3dObjLoader.cpp" />
     <ClCompile Include="Game\Utilities\Utilities.cpp" />

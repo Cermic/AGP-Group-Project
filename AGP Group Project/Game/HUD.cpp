@@ -134,7 +134,7 @@ void HUD::draw(stack<glm::mat4> mvStack, GLuint shaderProgram)
 
 // Draws a HUD that displays the Specular Shininess value of the scene object.
 // Takes the specular value of the object and the shader program along with the modelView stack as parameters.
-void HUD::draw(stack<glm::mat4> mvStack, int specularV, GLuint shaderProgram) 
+void HUD::draw(stack<glm::mat4> mvStack, vec3 value, GLuint shaderProgram) 
 {
 	glUseProgram(shaderProgram); //Use texture-only shader for text rendering
 	glDisable(GL_DEPTH_TEST); //Disable depth test for HUD label
@@ -152,7 +152,7 @@ void HUD::draw(stack<glm::mat4> mvStack, int specularV, GLuint shaderProgram)
 	mvStack.pop();
 	glEnable(GL_DEPTH_TEST);//Re-enable depth test after HUD label
 
-	string hudOutput = (" Specular Shininess: " + to_string(specularV));
+	string hudOutput = (" Specular Shininess: " + to_string(value));
 
 	label[0] = textToTexture(hudOutput.c_str() , label[0], { 255,0,255 });// calls textToTexture giving the string, the label it is to be placed on and the colour
 }

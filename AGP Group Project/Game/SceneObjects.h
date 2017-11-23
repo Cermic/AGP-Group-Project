@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Game/Utilities/Utilities.h"
+#include "../Game/Utilities/AABB.hpp"
 #include "Lights.h"
 #include "glm/glm.hpp"
 #include <glm/gtc/matrix_transform.hpp>
@@ -31,6 +32,7 @@ private:
 	Utilities util;
 	Lights light;
 	rt3d::materialStruct material;
+	CPM_GLM_AABB_NS::AABB aabb;
 	// Utilities object loaded to access the shaders, the light to allow for setLight commmands
 	// To be called and a material is needed as a filler value for the cubes initially.
 public:

@@ -81,9 +81,9 @@ void Game::render(SDL_Window * window)
 	mvStack.push(modelview); // modelview is pushed onto the stack to begin
 
 	// Camera set
-	camera->setAt(util->moveForward(camera->getEye(), camera->getRotation(), 1.0f));  
+	camera->setAt(util->moveForward(camera->getEyePos(), camera->getRotation(), 1.0f));  
 	// lookat is updated
-	mvStack.top() = mvStack.top() = glm::lookAt(camera->getEye(), camera->getAt(), camera->getUp());
+	mvStack.top() = mvStack.top() = glm::lookAt(camera->getEyePos(), camera->getAt(), camera->getUp());
 	// Base scene is now setup
 	// Skybox drawn
 	skybox->draw(mvStack, util->getCubeMapProgram(), util->getProjection());
@@ -106,7 +106,7 @@ void Game::render(SDL_Window * window)
 	lightBox->draw(mvStack, util->getPhongTextureProgram(), util->getProjection(),1.0f,light0->getLight()); // Small box on the right
 	lightBox2->draw(mvStack, util->getPhongTextureProgram(), util->getProjection(), 1.0f, light0->getLight()); // Small box on the left
 	// HUD drawn last so it renders on top.
-	//hud->draw(mvStack, box1->getSpecularValue(), util->getShaderProgram());
+	hud->draw(mvStack, camera->getEyePos(), util->getShaderProgram());
 	//keys->draw(mvStack, util->getShaderProgram());
 	//nameWaterMark->draw(mvStack, util->getShaderProgram(), 9, vec3(0.8, 0.9, 0.0), vec3(0.2, 0.1, 0.0), { 255,255,255 });
 	mvStack.pop();
@@ -160,17 +160,17 @@ void Game::update()
 	}
 	
 	// Moves camera forward
-	if (keys[SDL_SCANCODE_W]) camera->setEye(util->moveForward(camera->getEye(), camera->getRotation(), 0.1f));
+	if (keys[SDL_SCANCODE_W]) camera->setEye(util->moveForward(camera->getEyePos(), camera->getRotation(), 0.1f));
 	// Moves camera backward
-	if (keys[SDL_SCANCODE_S]) camera->setEye(util->moveForward(camera->getEye(), camera->getRotation(), -0.1f));
+	if (keys[SDL_SCANCODE_S]) camera->setEye(util->moveForward(camera->getEyePos(), camera->getRotation(), -0.1f));
 	// Moves camera left
-	if (keys[SDL_SCANCODE_A]) camera->setEye(util->moveRight(camera->getEye(), camera->getRotation(), -0.1f));
+	if (keys[SDL_SCANCODE_A]) camera->setEye(util->moveRight(camera->getEyePos(), camera->getRotation(), -0.1f));
 	// Moves camera right
-	if (keys[SDL_SCANCODE_D]) camera->setEye(util->moveRight(camera->getEye(), camera->getRotation(), 0.1f));
+	if (keys[SDL_SCANCODE_D]) camera->setEye(util->moveRight(camera->getEyePos(), camera->getRotation(), 0.1f));
 	// Moves camera up
-	if (keys[SDL_SCANCODE_UP]) camera->setEye(camera->getEye() + vec3(0.0f,0.1f,0.0f));
+	if (keys[SDL_SCANCODE_UP]) camera->setEye(camera->getEyePos() + vec3(0.0f,0.1f,0.0f));
 	// Moves camera down
-	if (keys[SDL_SCANCODE_DOWN]) camera->setEye(camera->getEye() - vec3(0.0f, 0.1f, 0.0f));
+	if (keys[SDL_SCANCODE_DOWN]) camera->setEye(camera->getEyePos() - vec3(0.0f, 0.1f, 0.0f));
 	// Rotates camera left
 	if (keys[SDL_SCANCODE_LEFT]) camera->setRotation(camera->getRotation() - 1.0f);
 	// Rotates right
