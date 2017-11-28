@@ -1,7 +1,7 @@
 #pragma once
 
 #include <GL/glew.h>
-
+#include "./Utilities/AABB.hpp"
 #include "Camera.h"
 #include "HUD.h"
 #include "Lights.h"
@@ -21,8 +21,9 @@ private:
 	Lights *light1;
 	//Lights *lights[2];
 	Skybox *skybox;
-	SceneObjects *box1;
-	SceneObjects *box2;
+	SceneObjects *boxes[10];
+	//SceneObjects *box1;
+	//SceneObjects *box2;
 	SceneObjects *lightBox;
 	SceneObjects *lightBox2;
 	Utilities *util;
@@ -34,6 +35,7 @@ private:
 
 	int sceneScale;
 	// Scene scale declared.
+
 public:
 	Game();
 	// Game Constructor
@@ -42,6 +44,8 @@ public:
 	void initialise();
 	void render(SDL_Window * window);
 	void update();
+	void InterSectionReaction(CPM_GLM_AABB_NS::AABB::INTERSECTION_TYPE intersectionType);
+	enum MovementState { FORWARD, BACKWARD, LEFT, RIGHT, UP, DOWN, NOMOVEMENT } moveState; // Enumerator used for checking the last direction the camera moved in
 	// init, render and update functions for the Game class, the Game class itself
 	// Is essentially a facade to interface with the main.
 	

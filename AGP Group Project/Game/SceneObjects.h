@@ -53,6 +53,7 @@ public:
 	int getSpecularValue() { return texel_specular_value; }
 	void setSpecularValue(int specularV) { texel_specular_value = specularV; }
 	void setTextures(char * textureName, char * textureName2);
+	CPM_GLM_AABB_NS::AABB getBoundingBox() { return aabb; }
 	// Accesors and mutators.
 	void draw(stack<glm::mat4> mvStack, GLuint shaderProgram, mat4 projectionMatrix);
 	void draw(stack<glm::mat4> mvStack, GLuint shaderProgram, mat4 projectionMatrix, bool twoTextures, rt3d::lightStruct light);

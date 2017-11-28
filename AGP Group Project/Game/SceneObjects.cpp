@@ -15,12 +15,16 @@ SceneObjects::SceneObjects(vec3 objectPosition, vec3 objectScale, char * texture
 	objectPos = objectPosition;
 	objectSize = objectScale; //scale of the object can be specified.
 	texture = util.loadBitmap(textureName);
-	aabb = CPM_GLM_AABB_NS::AABB(vec3((objectPosition - objectScale.x), (objectPosition + objectScale.y), (objectPosition + objectScale.z)), vec3((objectPosition + objectScale.x), (objectPosition - objectScale.y), (objectPosition - objectScale.z)));
+	vec3 p1 = vec3((objectPosition.x - objectScale.x), (objectPosition.y + objectScale.y), (objectPosition.z + objectScale.z));
+	// Sets the minimum coords for the bounding box
+	vec3 p2 = vec3((objectPosition.x + objectScale.x), (objectPosition.y - objectScale.y), (objectPosition.z - objectScale.z));
+	// Sets the maximum coords for the bounding box
+	aabb = CPM_GLM_AABB_NS::AABB(p1, p2);
 	vector<GLfloat> verts;
 	vector<GLfloat> norms;
 	vector<GLfloat> tex_coords;
 	vector<GLuint> indices;
-	rt3d::loadObj("cube.obj", verts, norms, tex_coords, indices);
+	rt3d::loadObj("./Assets/cube.obj", verts, norms, tex_coords, indices);
 	GLuint size = indices.size();
 	meshIndexCount = size;
 	meshObject = rt3d::createMesh(verts.size() / 3, verts.data(), nullptr, norms.data(), tex_coords.data(), size, indices.data());
@@ -36,11 +40,16 @@ SceneObjects::SceneObjects(vec3 objectPosition, vec3 objectScale, char * texture
 	objectSize = objectScale; //scale of the object can be specified.
 	texture = util.loadBitmap(textureName);
 	texture2 = util.loadBitmap(textureName2);
+	vec3 p1 = vec3((objectPosition.x - objectScale.x), (objectPosition.y + objectScale.y), (objectPosition.z + objectScale.z));
+	// Sets the minimum coords for the bounding box
+	vec3 p2 = vec3((objectPosition.x + objectScale.x), (objectPosition.y - objectScale.y), (objectPosition.z - objectScale.z));
+	// Sets the maximum coords for the bounding box
+	aabb = CPM_GLM_AABB_NS::AABB(p1, p2);
 	vector<GLfloat> verts;
 	vector<GLfloat> norms;
 	vector<GLfloat> tex_coords;
 	vector<GLuint> indices;
-	rt3d::loadObj("cube.obj", verts, norms, tex_coords, indices);
+	rt3d::loadObj("./Assets/cube.obj", verts, norms, tex_coords, indices);
 	GLuint size = indices.size();
 	meshIndexCount = size;
 	meshObject = rt3d::createMesh(verts.size() / 3, verts.data(), nullptr, norms.data(), tex_coords.data(), size, indices.data());
@@ -56,12 +65,17 @@ SceneObjects::SceneObjects(vec3 objectPosition, vec3 objectScale, GLfloat rotati
 	objectPos = objectPosition;
 	objectSize = objectScale; //scale of the object can be specified.
 	texture = util.loadBitmap(textureName);
+	vec3 p1 = vec3((objectPosition.x - objectScale.x), (objectPosition.y + objectScale.y), (objectPosition.z + objectScale.z));
+	// Sets the minimum coords for the bounding box
+	vec3 p2 = vec3((objectPosition.x + objectScale.x), (objectPosition.y - objectScale.y), (objectPosition.z - objectScale.z));
+	// Sets the maximum coords for the bounding box
+	aabb = CPM_GLM_AABB_NS::AABB(p1, p2);
 	rotationAmount = rotation;
 	vector<GLfloat> verts;
 	vector<GLfloat> norms;
 	vector<GLfloat> tex_coords;
 	vector<GLuint> indices;
-	rt3d::loadObj("cube.obj", verts, norms, tex_coords, indices);
+	rt3d::loadObj("./Assets/cube.obj", verts, norms, tex_coords, indices);
 	GLuint size = indices.size();
 	meshIndexCount = size;
 	meshObject = rt3d::createMesh(verts.size() / 3, verts.data(), nullptr, norms.data(), tex_coords.data(), size, indices.data());
@@ -77,12 +91,17 @@ SceneObjects::SceneObjects(vec3 objectPosition, vec3 objectScale, GLfloat rotati
 	objectSize = objectScale; //scale of the object can be specified.
 	texture = util.loadBitmap(textureName);
 	texture2 = util.loadBitmap(textureName2);
+	vec3 p1 = vec3((objectPosition.x - objectScale.x), (objectPosition.y + objectScale.y), (objectPosition.z + objectScale.z));
+	// Sets the minimum coords for the bounding box
+	vec3 p2 = vec3((objectPosition.x + objectScale.x), (objectPosition.y - objectScale.y), (objectPosition.z - objectScale.z));
+	// Sets the maximum coords for the bounding box
+	aabb = CPM_GLM_AABB_NS::AABB(p1, p2);
 	rotationAmount = rotation;
 	vector<GLfloat> verts;
 	vector<GLfloat> norms;
 	vector<GLfloat> tex_coords;
 	vector<GLuint> indices;
-	rt3d::loadObj("cube.obj", verts, norms, tex_coords, indices);
+	rt3d::loadObj("./Assets/cube.obj", verts, norms, tex_coords, indices);
 	GLuint size = indices.size();
 	meshIndexCount = size;
 	meshObject = rt3d::createMesh(verts.size() / 3, verts.data(), nullptr, norms.data(), tex_coords.data(), size, indices.data());
