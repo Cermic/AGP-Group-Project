@@ -33,6 +33,7 @@ private:
 	Lights light;
 	rt3d::materialStruct material;
 	CPM_GLM_AABB_NS::AABB aabb;
+	GLuint lightOn = 1;
 	// Utilities object loaded to access the shaders, the light to allow for setLight commmands
 	// To be called and a material is needed as a filler value for the cubes initially.
 public:
@@ -53,6 +54,8 @@ public:
 	int getSpecularValue() { return texel_specular_value; }
 	void setSpecularValue(int specularV) { texel_specular_value = specularV; }
 	void setTextures(char * textureName, char * textureName2);
+	GLuint getLightOn() { return lightOn; }
+	void setLightOn(GLuint lightOnOROff) { lightOn = lightOnOROff; }
 	CPM_GLM_AABB_NS::AABB getBoundingBox() { return aabb; }
 	// Accesors and mutators.
 	void draw(stack<glm::mat4> mvStack, GLuint shaderProgram, mat4 projectionMatrix);
@@ -65,12 +68,12 @@ public:
 
 
 	void drawWithTwoLights(stack<glm::mat4> mvStack, GLuint shaderProgram, mat4 projectionMatrix, GLfloat rotation,
-						   rt3d::lightStruct light0, rt3d::lightStruct light1);
+						   rt3d::lightStruct light0, rt3d::lightStruct light1, GLuint lightOn);
 
 
 	void drawWithTwoTexturesAndTwoLights(stack<glm::mat4> mvStack, GLuint shaderProgram, mat4 projectionMatrix, bool twoTextures, 
 										int textureVisible, int specularValue, GLfloat rotation, 
-										rt3d::lightStruct light, rt3d::lightStruct light2);
+										rt3d::lightStruct light, rt3d::lightStruct light2, GLuint lightOn);
 	// Updates position and rotation
 	void update(vec3 objectPosition, GLfloat rotation);
 

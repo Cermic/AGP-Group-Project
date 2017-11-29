@@ -88,11 +88,11 @@ void Game::render(SDL_Window * window)
 	light1->draw(mvStack, util->getPhongTextureProgram(), util->getProjection(), light1->getAttenuationConstant()); // Left hand side light
 	// Draws a box which is loaded with lightmapping, two textures can be affected by rotation, attenuation and specular shininess changes.
 	// boxes[0] is the box on the RIGHT
-	boxes[0]->drawWithTwoTexturesAndTwoLights(mvStack, util->getLightMap2LProgram(), util->getProjection(), true, boxes[0]->getTextureVisible(), boxes[0]->getSpecularValue(), boxes[0]->getRotation() + 0.1f, light0->getLight(), light1->getLight()); // This is the lightmapped box
+	boxes[0]->drawWithTwoTexturesAndTwoLights(mvStack, util->getLightMap2LProgram(), util->getProjection(), true, boxes[0]->getTextureVisible(), boxes[0]->getSpecularValue(), boxes[0]->getRotation() + 0.1f, light0->getLight(), light1->getLight(), 1); // This is the lightmapped box
 	// Draws a box which is loaded with regular phong lighting, one texture and can be affected by rotation and attenuation changes.																								
 	// boxes[1] is the box on the LEFT
 	//boxes[1]->draw(mvStack, util->getPhongTextureProgram(), util->getProjection(), boxes[1]->getRotation() + 0.1f, light1->getLight());
-	boxes[1]->drawWithTwoLights(mvStack, util->getPhong2LTextureProgram(), util->getProjection(), boxes[1]->getRotation() + 0.1f, light0->getLight(), light1->getLight());
+	boxes[1]->drawWithTwoLights(mvStack, util->getPhong2LTextureProgram(), util->getProjection(), boxes[1]->getRotation() + 0.1f, light0->getLight(), light1->getLight(), 1);
 	// Draws a box around the light that simply follows it.
 	lightBox->draw(mvStack, util->getPhongTextureProgram(), util->getProjection(), 1.0f, light0->getLight()); // Small box on the right
 	lightBox2->draw(mvStack, util->getPhongTextureProgram(), util->getProjection(), 1.0f, light0->getLight()); // Small box on the left
@@ -139,12 +139,12 @@ void Game::InterSectionReaction(CPM_GLM_AABB_NS::AABB::INTERSECTION_TYPE interse
 			camera->setEyePos(camera->getEyePos() + vec3(0.0f, 0.1f, 0.0f));
 			moveState = NOMOVEMENT;
 		}
-		cout << "Intersection" << endl;
+		//cout << "Intersection" << endl;
 	}
 	if (intersectionType == CPM_GLM_AABB_NS::AABB::OUTSIDE)
 	{
 		moveState == NOMOVEMENT;
-		cout << "No intersection" << endl;
+		//cout << "No intersection" << endl;
 	}
 }
 
@@ -285,26 +285,32 @@ void Game::update()
 		if (keys[SDL_SCANCODE_KP_3])
 		{
 			light0->setLightPos(light0->getLightPos() + vec4(0.0f, 0.0f, 0.1f, 0.0f));
+			light0->setConeDirection(light0->getConeDirection() + vec3(0.0f, 0.0f, 0.1f));
 		}
 		if (keys[SDL_SCANCODE_KP_9])
 		{
 			light0->setLightPos(light0->getLightPos() - vec4(0.0f, 0.0f, 0.1f, 0.0f));
+			light0->setConeDirection(light0->getConeDirection() - vec3(0.0f, 0.0f, 0.1f));
 		}
 		if (keys[SDL_SCANCODE_KP_8])
 		{
 			light0->setLightPos(light0->getLightPos() + vec4(0.0f, 0.1f, 0.0f, 0.0f));
+			light0->setConeDirection(light0->getConeDirection() + vec3(0.0f, 0.1f, 0.0f));
 		}
 		if (keys[SDL_SCANCODE_KP_2])
 		{
 			light0->setLightPos(light0->getLightPos() - vec4(0.0f, 0.1f, 0.0f, 0.0f));
+			light0->setConeDirection(light0->getConeDirection() - vec3(0.0f, 0.1f, 0.0f));
 		}
 		if (keys[SDL_SCANCODE_KP_4])
 		{
 			light0->setLightPos(light0->getLightPos() - vec4(0.1f, 0.0f, 0.0f, 0.0f));
+			light0->setConeDirection(light0->getConeDirection() - vec3(0.1f, 0.0f, 0.0f));
 		}
 		if (keys[SDL_SCANCODE_KP_6])
 		{
 			light0->setLightPos(light0->getLightPos() + vec4(0.1f, 0.0f, 0.0f, 0.0f));
+			light0->setConeDirection(light0->getConeDirection() + vec3(0.1f, 0.0f, 0.0f));
 		}
 	}
 	else
@@ -335,6 +341,17 @@ void Game::update()
 			light1->setLightPos(light1->getLightPos() + vec4(0.1f, 0.0f, 0.0f, 0.0f));
 		}
 
+	}
+
+	if (keys[SDL_SCANCODE_O])
+	{
+		boxes[0]->setLightOn(1);
+		boxes[1]->setLightOn(1);
+	}
+	if (keys[SDL_SCANCODE_P])
+	{
+		boxes[0]->setLightOn(0);
+		boxes[1]->setLightOn(0);
 	}
 	// Draws scene in poly only mode - no textures
 	if (keys[SDL_SCANCODE_1]) {

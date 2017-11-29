@@ -242,25 +242,27 @@ void setLight(const GLuint program, const lightStruct light) {
 	glUniform4fv(uniformIndex, 1, light.ambient);
 	uniformIndex = glGetUniformLocation(program, "light.diffuse");
 	glUniform4fv(uniformIndex, 1, light.diffuse);
-	uniformIndex = glGetUniformLocation(program, "light.specular");
+	uniformIndex = glGetUniformLocation(program, "light.specular");			// Passes in the basic components of a light
 	glUniform4fv(uniformIndex, 1, light.specular);
 	uniformIndex = glGetUniformLocation(program, "lightPosition");
 	glUniform4fv(uniformIndex, 1, light.position);
 
 	uniformIndex = glGetUniformLocation(program, "light.attConst");
 	glUniform1f(uniformIndex, light.attConst);
-	uniformIndex = glGetUniformLocation(program, "light.attLinear");
+	uniformIndex = glGetUniformLocation(program, "light.attLinear");	// Passes in the uniforms for attenuation
 	glUniform1f(uniformIndex, light.attLinear);
 	uniformIndex = glGetUniformLocation(program, "light.attQuadratic");
 	glUniform1f(uniformIndex, light.attQuadratic);
+
+	uniformIndex = glGetUniformLocation(program, "light.coneAngle");
+	glUniform1f(uniformIndex, light.coneAngle);								// Passes in the uniforms for a spotlight
+	uniformIndex = glGetUniformLocation(program, "light.coneDirection");
+	glUniform3fv(uniformIndex, 1, light.coneDirection);
 
 }
 
 void setTwoLights(const GLuint program, const lightStruct light0, const lightStruct light1)
 {
-	/*lightStruct light[2];
-	light[0] = light0;
-	light[1] = light1;*/
 
 	// pass in light data to shader
 	int uniformIndex = glGetUniformLocation(program, "light0.ambient");
@@ -278,6 +280,11 @@ void setTwoLights(const GLuint program, const lightStruct light0, const lightStr
 	glUniform1f(uniformIndex, light0.attLinear);
 	uniformIndex = glGetUniformLocation(program, "light0.attQuadratic");
 	glUniform1f(uniformIndex, light0.attQuadratic);
+
+	uniformIndex = glGetUniformLocation(program, "light0.coneAngle");
+	glUniform1f(uniformIndex, light0.coneAngle);								// Passes in the uniforms for a spotlight
+	uniformIndex = glGetUniformLocation(program, "light0.coneDirection");
+	glUniform3fv(uniformIndex, 1, light0.coneDirection);
 	// First light passed
 
 
@@ -296,12 +303,13 @@ void setTwoLights(const GLuint program, const lightStruct light0, const lightStr
 	glUniform1f(uniformIndex, light1.attLinear);
 	uniformIndex = glGetUniformLocation(program, "light1.attQuadratic");
 	glUniform1f(uniformIndex, light1.attQuadratic);
+
+	uniformIndex = glGetUniformLocation(program, "light1.coneAngle");
+	glUniform1f(uniformIndex, light1.coneAngle);								// Passes in the uniforms for a spotlight
+	uniformIndex = glGetUniformLocation(program, "light1.coneDirection");
+	glUniform3fv(uniformIndex, 1, light1.coneDirection);
 	// Second light passed.
 
-	//for (int i = 0; i++; i < 2)
-	//{
-		// code for looping the passes.
-	//}
 }
 
 //void setMultipleLights(const GLuint program, const lightStruct lights[], int numberOfLights)
