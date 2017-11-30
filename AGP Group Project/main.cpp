@@ -79,6 +79,7 @@ void update(void) {
 void draw(SDL_Window * window) {
 
 	scene1.render(window);
+	//scene1.renderWithShadows(window); // Currently only an incomplete implementation of shadow mapping
 
 	}
 

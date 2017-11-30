@@ -1,4 +1,4 @@
-#include "AABB.hpp"
+#include "../Utilities/AABB.hpp"
 #include <glm/gtx/component_wise.hpp>
 
 namespace CPM_GLM_AABB_NS {

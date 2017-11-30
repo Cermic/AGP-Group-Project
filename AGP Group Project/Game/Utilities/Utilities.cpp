@@ -122,6 +122,29 @@ void Utilities::loadUtilities()
 		uniformIndex = glGetUniformLocation(lightMap2LProgram, "textureUnit0");
 		glUniform1i(uniformIndex, 0);
 		// Lightmap shader setup
+		//Two Light Phong texture setup
+
+		combinedTextureProgram = rt3d::initShaders("Assets/Shaders/combined.vert", "Assets/Shaders/combined.frag");
+		//Setting up combined shaders program
+		uniformIndex = glGetUniformLocation(combinedTextureProgram, "textureUnit1");
+		// UniformIndex is the command that passes to the Shaders. //
+		glUniform1i(uniformIndex, 1);
+		uniformIndex = glGetUniformLocation(combinedTextureProgram, "textureUnit0");
+		glUniform1i(uniformIndex, 0);
+		uniformIndex = glGetUniformLocation(combinedTextureProgram, "textureUnit2");
+		glUniform1i(uniformIndex, 2);
+		// combined shader setup
+
+		/////////////////////////////////////////shadow shader configuration/////////////////////////////////////////
+		shadowProgram = rt3d::initShaders("Assets/Shaders/phong-shadow.vert", "Assets/Shaders/phong-shadow.frag");
+		//Setting up shadowProgram
+		depthProgram = rt3d::initShaders("Assets/Shaders/basicDepthShader.vert", "Assets/Shaders/basicDepthShader.frag");
+		//Setting up depthProgram
+		// UniformIndex is the command that passes to the Shaders. //
+		uniformIndex = glGetUniformLocation(shadowProgram, "textureUnit0");
+		glUniform1i(uniformIndex, 0);
+		uniformIndex = glGetUniformLocation(depthProgram, "shadowMap");
+		glUniform1i(uniformIndex, 1);
 
 		//Shaders loaded for the cubemap
 		cubeMapProgram = rt3d::initShaders("Assets/Shaders/cubemap.vert", "Assets/Shaders/cubemap.frag");
