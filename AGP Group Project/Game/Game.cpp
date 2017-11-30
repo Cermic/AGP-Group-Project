@@ -46,6 +46,7 @@ void Game::initialise()
 	//Skybox initialised and loaded.
 	skybox = new Skybox();
 	skybox->load();
+	particles = new ParticleArray(vec3(2.0f,2.0f,0.0f),1000,"Assets/Textures/water.bmp"); // Particles constructed
 
 	//initialise openGL to start depth testing and blend
 	glEnable(GL_DEPTH_TEST);
@@ -100,6 +101,8 @@ void Game::render(SDL_Window * window)
 	hud->draw(mvStack, camera->getEyePos(), util->getShaderProgram());
 	//keys->draw(mvStack, util->getShaderProgram());
 	//nameWaterMark->draw(mvStack, util->getShaderProgram(), 9, vec3(0.8, 0.9, 0.0), vec3(0.2, 0.1, 0.0), { 255,255,255 });
+	// Particles drawn
+	particles->draw(mvStack, util->getParticleProgram(), util->getProjection());
 	mvStack.pop();
 	glDepthMask(GL_TRUE);
 	SDL_GL_SwapWindow(window); // swap buffers
@@ -159,6 +162,9 @@ void Game::update()
 	// Updates lightbox position based on the light
 	lightBox->update(light0->getLightPos(), 1.0f);
 	lightBox2->update(light1->getLightPos(), 1.0f);
+
+	particles->update();
+	// Particles updated
 
 	// boxes position and rotation updated.
 	if (keys[SDL_SCANCODE_3])

@@ -8,6 +8,7 @@
 #include "Skybox.h"
 #include "SceneObjects.h"
 #include "../Game/Utilities/Utilities.h"
+#include "ParticleArray.h"
 // Game needs access to any class that will be instantiated by it.
 
 class Game
@@ -22,10 +23,9 @@ private:
 	//Lights *lights[2];
 	Skybox *skybox;
 	SceneObjects *boxes[10];
-	//SceneObjects *box1;
-	//SceneObjects *box2;
 	SceneObjects *lightBox;
 	SceneObjects *lightBox2;
+	ParticleArray *particles;
 	Utilities *util;
 	// All of the objects from other classes delcared for use in the scene.
 

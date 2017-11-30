@@ -51,6 +51,9 @@
     <ClInclude Include="Game\Utilities\AABB.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Game\ParticleArray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Font Include="Assets\Fonts\Elementary_Gothic_Scaled.ttf">
@@ -95,6 +98,12 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Assets\Shaders\lightmap2L.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Assets\Shaders\particle.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Assets\Shaders\particle.vert">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
@@ -144,6 +153,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Game\Utilities\AABB.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\ParticleArray.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
