@@ -24,7 +24,7 @@ SceneObjects::SceneObjects(vec3 objectPosition, vec3 objectScale, char * texture
 	vector<GLfloat> norms;
 	vector<GLfloat> tex_coords;
 	vector<GLuint> indices;
-	rt3d::loadObj("./Assets/cube.obj", verts, norms, tex_coords, indices);
+	rt3d::loadObj("./Assets/Objs/cube.obj", verts, norms, tex_coords, indices);
 	GLuint size = indices.size();
 	meshIndexCount = size;
 	meshObject = rt3d::createMesh(verts.size() / 3, verts.data(), nullptr, norms.data(), tex_coords.data(), size, indices.data());
@@ -49,7 +49,7 @@ SceneObjects::SceneObjects(vec3 objectPosition, vec3 objectScale, char * texture
 	vector<GLfloat> norms;
 	vector<GLfloat> tex_coords;
 	vector<GLuint> indices;
-	rt3d::loadObj("./Assets/cube.obj", verts, norms, tex_coords, indices);
+	rt3d::loadObj("./Assets/Objs/cube.obj", verts, norms, tex_coords, indices);
 	GLuint size = indices.size();
 	meshIndexCount = size;
 	meshObject = rt3d::createMesh(verts.size() / 3, verts.data(), nullptr, norms.data(), tex_coords.data(), size, indices.data());
@@ -75,7 +75,7 @@ SceneObjects::SceneObjects(vec3 objectPosition, vec3 objectScale, GLfloat rotati
 	vector<GLfloat> norms;
 	vector<GLfloat> tex_coords;
 	vector<GLuint> indices;
-	rt3d::loadObj("./Assets/cube.obj", verts, norms, tex_coords, indices);
+	rt3d::loadObj("./Assets/Objs/cube.obj", verts, norms, tex_coords, indices);
 	GLuint size = indices.size();
 	meshIndexCount = size;
 	meshObject = rt3d::createMesh(verts.size() / 3, verts.data(), nullptr, norms.data(), tex_coords.data(), size, indices.data());
@@ -101,7 +101,7 @@ SceneObjects::SceneObjects(vec3 objectPosition, vec3 objectScale, GLfloat rotati
 	vector<GLfloat> norms;
 	vector<GLfloat> tex_coords;
 	vector<GLuint> indices;
-	rt3d::loadObj("./Assets/cube.obj", verts, norms, tex_coords, indices);
+	rt3d::loadObj("./Assets/Objs/cube.obj", verts, norms, tex_coords, indices);
 	GLuint size = indices.size();
 	meshIndexCount = size;
 	meshObject = rt3d::createMesh(verts.size() / 3, verts.data(), nullptr, norms.data(), tex_coords.data(), size, indices.data());

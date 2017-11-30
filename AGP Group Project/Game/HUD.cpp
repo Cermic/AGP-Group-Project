@@ -9,7 +9,7 @@ HUD::HUD()
 	vector<GLfloat> norms;
 	vector<GLfloat> tex_coords;
 	vector<GLuint> indices;
-	rt3d::loadObj("./Assets/cube.obj", verts, norms, tex_coords, indices);
+	rt3d::loadObj("./Assets/Objs/cube.obj", verts, norms, tex_coords, indices);
 	// loads a cube from an external file and applies the norms and vertices along with texture coordinates
 	GLuint size = indices.size();
 	meshIndexCount = size;
