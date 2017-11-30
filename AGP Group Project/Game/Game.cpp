@@ -20,6 +20,25 @@ Game::~Game()
 	delete[] skybox;
 	delete[] boxes[0];
 	delete[] boxes[1];
+
+	delete[] boxes[2];
+	delete[] boxes[3];
+	delete[] boxes[4];
+	delete[] boxes[5];
+	delete[] boxes[6];
+	delete[] boxes[7];
+	delete[] boxes[8];
+	delete[] boxes[9];
+	delete[] boxes[10];
+	delete[] boxes[11];
+	delete[] boxes[12];
+	delete[] boxes[13];
+	delete[] boxes[14];
+	delete[] boxes[15];
+	delete[] boxes[16];
+
+
+
 	delete[] lightBox;
 	delete[] lightBox2;
 	delete[] util;
@@ -46,7 +65,12 @@ void Game::initialise()
 	//Skybox initialised and loaded.
 	skybox = new Skybox();
 	skybox->load();
+
+	//Initialise FBO for shadows
+	shadowFBO.generateShadowFBO();
+
 	particles = new ParticleArray(vec3(2.0f,2.0f,0.0f),1000,"Assets/Textures/water.bmp"); // Particles constructed
+
 
 	//initialise openGL to start depth testing and blend
 	glEnable(GL_DEPTH_TEST);
@@ -54,16 +78,95 @@ void Game::initialise()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// Sceneobjects loaded
-	boxes[0] = new SceneObjects(vec3(-5.0f, 5.0f, -2.5f), vec3(1.0f, 1.0f, 1.0f), 1.0f, "Assets/Textures/MetalBox.bmp", "Assets/Textures/MetalBoxLightMapAdvanced.bmp");
-	boxes[1] = new SceneObjects(vec3(-8.0f, 5.0f, -2.5f), vec3(1.0f, 1.0f, 1.0f), 1.0f, "Assets/Textures/MetalBox.bmp");
+	boxes[0] = new SceneObjects(vec3(-5.0f, 5.0f, -2.5f), vec3(1.0f, 1.0f, 1.0f), 1.0f, "Assets/Textures/MetalBox.bmp", "Assets/Textures/MetalBoxLightMapAdvanced.bmp", "Assets/Textures/metalbox-normal.bmp");
+	boxes[1] = new SceneObjects(vec3(-8.0f, 5.0f, -2.5f), vec3(1.0f, 1.0f, 1.0f), 1.0f, "Assets/Textures/MetalBox.bmp", "Assets/Textures/MetalBoxLightMapAdvanced.bmp", "Assets/Textures/metalbox-normal.bmp");
+	//floor
+	boxes[2] = new SceneObjects(vec3(0.0f, 0.0f, 0.0f), vec3(40.0f, 1.0f, 60.0f), 0.0f, "Assets/Textures/bricktexture.bmp", "Assets/Textures/bricknormal.bmp");
+	//ceiling
+	boxes[3] = new SceneObjects(vec3(0.0f, 22.0f, 0.0f), vec3(40.0f, 1.0f, 60.0f), 0.0f, "Assets/Textures/bricktexture.bmp", "Assets/Textures/bricknormal.bmp");
+	//first room
+	boxes[4] = new SceneObjects(vec3(  0.0f, 11.0f, 59.0f), vec3(20.0f, 10.0f,  1.0f), 0.0f, "Assets/Textures/bricktexture.bmp", "Assets/Textures/bricknormal.bmp");
+	boxes[5] = new SceneObjects(vec3(-21.0f, 11.0f, 38.0f), vec3( 1.0f, 10.0f, 20.0f), 0.0f, "Assets/Textures/bricktexture.bmp", "Assets/Textures/bricknormal.bmp");
+	boxes[6] = new SceneObjects(vec3( 21.0f, 11.0f, 38.0f), vec3( 1.0f, 10.0f, 20.0f), 0.0f, "Assets/Textures/bricktexture.bmp", "Assets/Textures/bricknormal.bmp");
+	boxes[7] = new SceneObjects(vec3(-22.0f, 11.0f, 17.0f), vec3(16.0f, 10.0f,  1.0f), 0.0f, "Assets/Textures/bricktexture.bmp", "Assets/Textures/bricknormal.bmp");
+	boxes[8] = new SceneObjects(vec3( 22.0f, 11.0f, 17.0f), vec3(16.0f, 10.0f,  1.0f), 0.0f, "Assets/Textures/bricktexture.bmp", "Assets/Textures/bricknormal.bmp");
+	boxes[9] = new SceneObjects(vec3(  0.0f, 15.0f, 17.0f), vec3( 6.0f,  6.0f,  1.0f), 0.0f, "Assets/Textures/bricktexture.bmp", "Assets/Textures/bricknormal.bmp");
+	//second room
+	boxes[10] = new SceneObjects(vec3(-39.0f, 11.0f,   0.0f), vec3( 1.0f, 10.0f, 16.0f), 0.0f, "Assets/Textures/bricktexture.bmp", "Assets/Textures/bricknormal.bmp");
+	boxes[11] = new SceneObjects(vec3( 39.0f, 11.0f,   0.0f), vec3( 1.0f, 10.0f, 16.0f), 0.0f, "Assets/Textures/bricktexture.bmp", "Assets/Textures/bricknormal.bmp");
+	boxes[12] = new SceneObjects(vec3(-20.0f, 11.0f, -17.0f), vec3(20.0f, 10.0f,  1.0f), 0.0f, "Assets/Textures/bricktexture.bmp", "Assets/Textures/bricknormal.bmp");
+	boxes[13] = new SceneObjects(vec3( 20.0f, 11.0f, -17.0f), vec3(20.0f, 10.0f,  1.0f), 0.0f, "Assets/Textures/bricktexture.bmp","Assets/Textures/bricknormal.bmp");
+
+	boxes[14] = new SceneObjects(vec3(-20.0f, 11.0f,   0.0f), vec3( 4.0f, 10.0f,  4.0f), 0.0f, "Assets/Textures/MetalBox.bmp", "Assets/Textures/MetalBoxLightMapAdvanced.bmp", "Assets/Textures/bricknormal.bmp");
+	boxes[15] = new SceneObjects(vec3( 20.0f, 11.0f,   0.0f), vec3( 4.0f, 10.0f,  4.0f), 0.0f, "Assets/Textures/MetalBox.bmp", "Assets/Textures/MetalBoxLightMapAdvanced.bmp", "Assets/Textures/bricknormal.bmp");
+
+	boxes[16] = new SceneObjects(vec3(-3.0f, 5.0f, -2.5f), vec3(1.0f, 1.0f, 1.0f), 1.0f, "Assets/Textures/MetalBox.bmp", "Assets/Textures/MetalBoxLightMapAdvanced.bmp", "Assets/Textures/metalbox-normal.bmp");
+
 
 	lightBox = new SceneObjects(light0->getLightPos(), vec3(0.25f, 0.25f, 0.25f), "Assets/Textures/MetalBox.bmp");
 	lightBox2 = new SceneObjects(light1->getLightPos(), vec3(0.25f, 0.25f, 0.25f), "Assets/Textures/MetalBox.bmp");
 }
 
+void Game::renderWithShadows(SDL_Window * window) {// Example for incomplete implementation of shadow mapping as example of rendering method
+	int pass = 1;
+	glEnable(GL_CULL_FACE);
+	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glm::mat4 projection(1.0);// Sets up a fresh projection at the start of the scene
+	rt3d::setUniformMatrix4fv(util->getLightMapProgram(), "projection", glm::value_ptr(util->getProjection()));
+
+	GLfloat scale(1.0f); // just to allow easy scaling of complete scene
+	glm::mat4 modelview(1.0); // set base position for scene
+	mvStack.push(modelview); // modelview is pushed onto the stack to begin
+
+							 // Camera set
+	camera->setAt(util->moveForward(camera->getEyePos(), camera->getRotation(), 1.0f));
+	// lookat is updated
+	mvStack.top() = mvStack.top() = glm::lookAt(camera->getEyePos(), camera->getAt(), camera->getUp());
+	// Base scene is now setup
+
+	// 1. render depth of scene to texture (from light's perspective)
+	if (pass == 1) {
+		shadowFBO.firstPass(light0->getLightPos(), util->getDepthProgram());
+
+		//boxes[0]->drawWithVariableTextures(mvStack, util->getCombinedTextureProgram(), util->getProjection(), 3, 0, 0, 0.0f, light0->getLight(), camera->getEyePos());
+		//boxes[1]->drawWithVariableTextures(mvStack, util->getCombinedTextureProgram(), util->getProjection(), 3, 0, 0, 0.0f, light0->getLight(), camera->getEyePos());
+		pass = 2;
+	}
+
+	// 2. render scene as normal using the generated depth/shadow map  
+	else {
+		shadowFBO.secondPass(util->getShadowProgram());
+
+		// Skybox drawn
+		skybox->draw(mvStack, util->getCubeMapProgram(), util->getProjection());
+		// The scene objects decide which shader and light they will use in the scene so it does not matter where the light
+		// Is declared in the render portion of the program.
+		// Draws the scene lights that apply to all objects with Phong shader as default for the lightmapped box
+		light0->draw(mvStack, util->getShadowProgram(), util->getProjection(), light0->getAttenuationConstant()); // Right hand side light
+		light1->draw(mvStack, util->getShadowProgram(), util->getProjection(), light1->getAttenuationConstant()); // Left hand side light
+		boxes[0]->drawWithTwoTexturesAndTwoLights(mvStack, util->getShadowProgram(), util->getProjection(), true, boxes[0]->getTextureVisible(), boxes[0]->getSpecularValue(), boxes[0]->getRotation() + 0.1f, light0->getLight(), light1->getLight()); // This is the lightmapped box
+		boxes[1]->drawWithTwoLights(mvStack, util->getShadowProgram(), util->getProjection(), boxes[1]->getRotation() + 0.1f, light0->getLight(), light1->getLight());
+		// Draws a box around the light that simply follows it.
+		lightBox->draw(mvStack, util->getShadowProgram(), util->getProjection(), 1.0f, light0->getLight()); // Small box on the right
+		lightBox2->draw(mvStack, util->getShadowProgram(), util->getProjection(), 1.0f, light0->getLight()); // Small box on the left
+																												   // HUD drawn last so it renders on top.
+		hud->draw(mvStack, camera->getEyePos(), util->getShaderProgram());
+		//keys->draw(mvStack, util->getShaderProgram());
+		//nameWaterMark->draw(mvStack, util->getShaderProgram(), 9, vec3(0.8, 0.9, 0.0), vec3(0.2, 0.1, 0.0), { 255,255,255 });
+		mvStack.pop();
+		glDepthMask(GL_TRUE);
+		SDL_GL_SwapWindow(window); // swap buffers
+		pass = 1;
+
+		//Shadow program in its final form would include everything from the other shaders, including light mapping, normal mapping and multiple light sources
+	}
+}
 // Draws all of the scene objects
 void Game::render(SDL_Window * window)
-{
+{	
+	int pass = 1;
 	glEnable(GL_CULL_FACE);
 	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -76,10 +179,12 @@ void Game::render(SDL_Window * window)
 	mvStack.push(modelview); // modelview is pushed onto the stack to begin
 
 	// Camera set
+
 	camera->setAt(util->moveForward(camera->getEyePos(), camera->getRotation(), 1.0f));
 	// lookat is updated
+	mat4 view = glm::lookAt(camera->getEyePos(), camera->getAt(), camera->getUp());
 	mvStack.top() = mvStack.top() = glm::lookAt(camera->getEyePos(), camera->getAt(), camera->getUp());
-	// Base scene is now setup
+	
 	// Skybox drawn
 	skybox->draw(mvStack, util->getCubeMapProgram(), util->getProjection());
 	// The scene objects decide which shader and light they will use in the scene so it does not matter where the light
@@ -89,11 +194,32 @@ void Game::render(SDL_Window * window)
 	light1->draw(mvStack, util->getPhongTextureProgram(), util->getProjection(), light1->getAttenuationConstant()); // Left hand side light
 	// Draws a box which is loaded with lightmapping, two textures can be affected by rotation, attenuation and specular shininess changes.
 	// boxes[0] is the box on the RIGHT
-	boxes[0]->drawWithTwoTexturesAndTwoLights(mvStack, util->getLightMap2LProgram(), util->getProjection(), true, boxes[0]->getTextureVisible(), boxes[0]->getSpecularValue(), boxes[0]->getRotation() + 0.1f, light0->getLight(), light1->getLight(), 1); // This is the lightmapped box
+
+	boxes[0]->drawWithVariableTextures(mvStack, util->getCombinedTextureProgram(), util->getProjection(), 3, 0, 0, 0.0f, light0->getLight(), light1->getLight(), camera->getEyePos(), view); // This is the lightmapped box
 	// Draws a box which is loaded with regular phong lighting, one texture and can be affected by rotation and attenuation changes.																								
 	// boxes[1] is the box on the LEFT
 	//boxes[1]->draw(mvStack, util->getPhongTextureProgram(), util->getProjection(), boxes[1]->getRotation() + 0.1f, light1->getLight());
-	boxes[1]->drawWithTwoLights(mvStack, util->getPhong2LTextureProgram(), util->getProjection(), boxes[1]->getRotation() + 0.1f, light0->getLight(), light1->getLight(), 1);
+	boxes[1]->drawWithVariableTextures(mvStack, util->getCombinedTextureProgram(), util->getProjection(), 3, 0, 0, 0.0f, light0->getLight(), light1->getLight(), camera->getEyePos(), view);
+
+
+	//boxes[2]->drawWithVariableTextures(mvStack, util->getCombinedTextureProgram(), util->getProjection(), 3, 0, 0, 0.0f, light0->getLight(), light1->getLight(), view);
+	boxes[2]->drawWithVariableTextures(mvStack, util->getCombinedTextureProgram(), util->getProjection(), 2, 0, 0, 0.0f, light0->getLight(), light1->getLight(), camera->getEyePos(), view);
+
+	boxes[3]->drawWithVariableTextures(mvStack, util->getCombinedTextureProgram(), util->getProjection(), 2, 0, 0, 0.0f, light0->getLight(), light1->getLight(), camera->getEyePos(), view);
+	boxes[4]->drawWithVariableTextures(mvStack, util->getCombinedTextureProgram(), util->getProjection(), 2, 0, 0, 0.0f, light0->getLight(), light1->getLight(), camera->getEyePos(), view);
+	boxes[5]->drawWithVariableTextures(mvStack, util->getCombinedTextureProgram(), util->getProjection(), 2, 0, 0, 0.0f, light0->getLight(), light1->getLight(), camera->getEyePos(), view);
+	boxes[6]->drawWithVariableTextures(mvStack, util->getCombinedTextureProgram(), util->getProjection(), 2, 0, 0, 0.0f, light0->getLight(), light1->getLight(), camera->getEyePos(), view);
+	boxes[7]->drawWithVariableTextures(mvStack, util->getCombinedTextureProgram(), util->getProjection(), 2, 0, 0, 0.0f, light0->getLight(), light1->getLight(), camera->getEyePos(), view);
+	boxes[8]->drawWithVariableTextures(mvStack, util->getCombinedTextureProgram(), util->getProjection(), 2, 0, 0, 0.0f, light0->getLight(), light1->getLight(), camera->getEyePos(), view);
+	boxes[9]->drawWithVariableTextures(mvStack, util->getCombinedTextureProgram(), util->getProjection(), 2, 0, 0, 0.0f, light0->getLight(), light1->getLight(), camera->getEyePos(), view);
+	boxes[10]->drawWithVariableTextures(mvStack, util->getCombinedTextureProgram(), util->getProjection(), 2, 0, 0, 0.0f, light0->getLight(), light1->getLight(), camera->getEyePos(), view);
+	boxes[11]->drawWithVariableTextures(mvStack, util->getCombinedTextureProgram(), util->getProjection(), 2, 0, 0, 0.0f, light0->getLight(), light1->getLight(), camera->getEyePos(), view);
+	boxes[12]->drawWithVariableTextures(mvStack, util->getCombinedTextureProgram(), util->getProjection(), 2, 0, 0, 0.0f, light0->getLight(), light1->getLight(), camera->getEyePos(), view);
+	boxes[13]->drawWithVariableTextures(mvStack, util->getCombinedTextureProgram(), util->getProjection(), 2, 0, 0, 0.0f, light0->getLight(), light1->getLight(), camera->getEyePos(), view);
+	boxes[14]->drawWithVariableTextures(mvStack, util->getCombinedTextureProgram(), util->getProjection(), 3, 0, 0, 0.0f, light0->getLight(), light1->getLight(), camera->getEyePos(), view);
+	boxes[15]->drawWithVariableTextures(mvStack, util->getCombinedTextureProgram(), util->getProjection(), 3, 0, 0, 0.0f, light0->getLight(), light1->getLight(), camera->getEyePos(), view);
+	boxes[16]->drawWithVariableTextures(mvStack, util->getCombinedTextureProgram(), util->getProjection(), 3, 0, 0, 0.0f, light0->getLight(), light1->getLight(), camera->getEyePos(), view);
+
 	// Draws a box around the light that simply follows it.
 	lightBox->draw(mvStack, util->getPhongTextureProgram(), util->getProjection(), 1.0f, light0->getLight()); // Small box on the right
 	lightBox2->draw(mvStack, util->getPhongTextureProgram(), util->getProjection(), 1.0f, light0->getLight()); // Small box on the left
@@ -142,7 +268,8 @@ void Game::InterSectionReaction(CPM_GLM_AABB_NS::AABB::INTERSECTION_TYPE interse
 			camera->setEyePos(camera->getEyePos() + vec3(0.0f, 0.1f, 0.0f));
 			moveState = NOMOVEMENT;
 		}
-		//cout << "Intersection" << endl;
+		cout << "Intersection" << endl;
+
 	}
 	if (intersectionType == CPM_GLM_AABB_NS::AABB::OUTSIDE)
 	{
@@ -346,8 +473,7 @@ void Game::update()
 		{
 			light1->setLightPos(light1->getLightPos() + vec4(0.1f, 0.0f, 0.0f, 0.0f));
 		}
-
-	}
+  }
 
 	if (keys[SDL_SCANCODE_O])
 	{
@@ -358,6 +484,7 @@ void Game::update()
 	{
 		boxes[0]->setLightOn(0);
 		boxes[1]->setLightOn(0);
+
 	}
 	// Draws scene in poly only mode - no textures
 	if (keys[SDL_SCANCODE_1]) {

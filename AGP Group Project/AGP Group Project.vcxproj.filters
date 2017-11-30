@@ -51,7 +51,17 @@
     <ClInclude Include="Game\Utilities\AABB.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+
+    <ClInclude Include="FBO.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Calculations.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VBO.h">
+
     <ClInclude Include="Game\ParticleArray.h">
+
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -100,6 +110,30 @@
     <None Include="Assets\Shaders\lightmap2L.vert">
       <Filter>Resource Files</Filter>
     </None>
+
+    <None Include="Assets\Shaders\normalmap.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Assets\Shaders\normalmap.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Assets\Shaders\basicDepthShader.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Assets\Shaders\basicDepthShader.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Assets\Shaders\phong-shadow.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Assets\Shaders\phong-shadow.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Assets\Shaders\combined.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Assets\Shaders\combined.vert">
+
     <None Include="Assets\Shaders\particle.frag">
       <Filter>Resource Files</Filter>
     </None>
@@ -118,6 +152,15 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Assets\Textures\MetalBoxLightMapAdvanced.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Textures\bricknormal.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Textures\bricktexture.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Textures\metalbox-normal.bmp">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
@@ -155,7 +198,17 @@
     <ClCompile Include="Game\Utilities\AABB.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+
+    <ClCompile Include="FBO.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Calculations.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VBO.cpp">
+
     <ClCompile Include="Game\ParticleArray.cpp">
+
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -28,6 +28,7 @@ private:
 	// Creates a uniformIndex to be used for passing data to the shaders.
 	GLuint cubeMapProgram;
 	GLuint shaderProgram;
+	GLuint shadowProgram, depthProgram, combinedTextureProgram;
 	GLuint particleProgram;
 	// declares GLuints for the shaders
 	rt3d::materialStruct material0;
@@ -47,6 +48,9 @@ public:
 	GLuint getUniformIndex() {return uniformIndex;}	
 	GLuint getCubeMapProgram() { return cubeMapProgram; }
 	GLuint getShaderProgram() { return shaderProgram; }
+	GLuint getShadowProgram() { return shadowProgram; }
+	GLuint getDepthProgram() { return depthProgram; }
+	GLuint getCombinedTextureProgram() { return combinedTextureProgram; }
 	GLuint getParticleProgram() { return particleProgram; }
 	rt3d::materialStruct getMaterial() { return material0; }
 	// mutator and accessor methods

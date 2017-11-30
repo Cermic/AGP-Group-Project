@@ -7,6 +7,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <stack>
+#include "../VBO.h" // needed to create the tangent vbo during object initialisation
+#include "../Calculations.h" //needed to create tangent vector during object initialisation
+
 // Scene objects includes Utilties to load shaders and texutures
 // Includes Lights to allow the objects to determine how they will react to a light
 // The stack for matrix operations
@@ -21,6 +24,7 @@ private:
 	// Object position in the scene
 	GLuint texture;
 	GLuint texture2;
+	GLuint texture3;
 	// Textures for the objects
 	int i_texture_isvisible = 0;
 	int texel_specular_value = 0;
@@ -45,6 +49,7 @@ public:
 	SceneObjects(vec3 objectPos, vec3 objectScale, char * textureName, char * textureName2);
 	SceneObjects(vec3 objectPos, vec3 objectScale, GLfloat rotation, char * textureName);
 	SceneObjects(vec3 objectPos, vec3 objectScale, GLfloat rotation, char * textureName, char * textureName2);
+	SceneObjects(vec3 objectPosition, vec3 objectScale, GLfloat rotation, char * textureName, char * textureName2, char * textureName3);
 	//Constrcutors with rotation
 	// There are a number of constructors to allow for the creation of objects with and without double texturing and with or without rotation.
 	GLfloat getRotation() { return rotationAmount; }
@@ -54,8 +59,10 @@ public:
 	int getSpecularValue() { return texel_specular_value; }
 	void setSpecularValue(int specularV) { texel_specular_value = specularV; }
 	void setTextures(char * textureName, char * textureName2);
+	void setTextures(char * textureName, char * textureName2, char * textureName3);// try not to make overloaded mutators. Call them something else!
 	GLuint getLightOn() { return lightOn; }
 	void setLightOn(GLuint lightOnOROff) { lightOn = lightOnOROff; }
+
 	CPM_GLM_AABB_NS::AABB getBoundingBox() { return aabb; }
 	// Accesors and mutators.
 	void draw(stack<glm::mat4> mvStack, GLuint shaderProgram, mat4 projectionMatrix);
@@ -73,8 +80,14 @@ public:
 
 	void drawWithTwoTexturesAndTwoLights(stack<glm::mat4> mvStack, GLuint shaderProgram, mat4 projectionMatrix, bool twoTextures, 
 										int textureVisible, int specularValue, GLfloat rotation, 
+
+										rt3d::lightStruct light, rt3d::lightStruct light2);
+
+	void drawWithVariableTextures(stack<glm::mat4> passedStack, GLuint shaderProgram, mat4 projectionMatrix, int texturesCount, int textureVisible, int specularValue, GLfloat rotation, rt3d::lightStruct light0, rt3d::lightStruct light1, vec3 eye, mat4 view);
+		// Updates position and rotation
+
 										rt3d::lightStruct light, rt3d::lightStruct light2, GLuint lightOn);
-	// Updates position and rotation
+
 	void update(vec3 objectPosition, GLfloat rotation);
 
 };
