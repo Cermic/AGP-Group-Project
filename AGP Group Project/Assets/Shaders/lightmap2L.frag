@@ -13,6 +13,9 @@ struct lightStruct
 	float attConst;
 	float attLinear;
 	float attQuadratic;
+
+	float coneAngle;
+	vec3 coneDirection;
 };
 
 struct materialStruct
@@ -36,6 +39,7 @@ uniform sampler2D textureUnit0;
 uniform sampler2D textureUnit1;
 uniform int textureVisible;
 uniform int specularValue;
+uniform int lightOn;
 
 uniform sampler2D ambient;
 uniform sampler2D diffuse;
@@ -46,6 +50,9 @@ in vec3 vertex_In_Eye_Coordinates;
 in vec3 surface_Normal_To_Light_From_Vertex[numberOfLights];
 in vec2 ex_TexCoord;
 in float dist_From_Vertex_To_Light[numberOfLights];
+
+in float out_Attenuation[numberOfLights];
+
 layout(location = 0) out vec4 out_Color;
  
 void main(void) {
@@ -55,9 +62,8 @@ void main(void) {
 
 	vec4 tmp_Colour[numberOfLights];           // Vec4 array to hold the colours that will be added together into litColour
 	vec4 litColour[numberOfLights];			   // Litcolour will hold to total colour
-	float specificAttenuation[numberOfLights]; // Captures the attenuation specific to the particular light being iterated through in the array.
 
-	vec4 totalLitColours=vec4(0.0f,0.0f,0.0f,0.0f); // Holds to total colour of all lights in the scene.
+	vec4 totalLitColours = vec4(0.0f,0.0f,0.0f,0.0f); // Holds to total colour of all lights in the scene.
 	
 	for (int i = 0; i < numberOfLights; i++)
 	{
@@ -85,16 +91,16 @@ void main(void) {
 	// blue component of the texture is the specular intensity
 	// The speuclar intensity is given by the b(blue) value of textureUnit1 at the relevant coordindate for the pixel.
 
-	// Attenuation //
-	float attenuation = light[i].attConst + light[i].attLinear * dist_From_Vertex_To_Light[i] + 
-	light[i].attQuadratic * dist_From_Vertex_To_Light[i] * dist_From_Vertex_To_Light[i];
-
 	// Lit colour being calculated
 	tmp_Colour[i] = (diffuse + specular);
 	//attenuation does not affect ambient light
-	litColour[i] = ambient + vec4((tmp_Colour[i].rgb / attenuation), 1.0);
+	litColour[i] = ambient + vec4((tmp_Colour[i].rgb / out_Attenuation[i]), 1.0);
 
+	
 	totalLitColours += (litColour[i]/2);
+		
+		
+
 	}
 	// Fragment colour //
 	// The actual material seen by the user should be the box which is done here.
@@ -107,7 +113,15 @@ void main(void) {
 	{
 		material_tex = texture(textureUnit1, ex_TexCoord);
 	}
-	out_Color = totalLitColours * material_tex;
+
+	if(lightOn == 0)
+	{
+		out_Color = material_tex;
+	}
+	if(lightOn == 1)
+	{
+		out_Color = totalLitColours * material_tex;
+	}
 	// The colour parameters collected by our rgb values are now applied to the box texture to 
 	// Create the appropriate lighting effects on the seperate parts of the box.
 

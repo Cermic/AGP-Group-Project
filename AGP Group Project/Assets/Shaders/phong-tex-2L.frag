@@ -13,6 +13,9 @@ struct lightStruct
 	float attConst;
 	float attLinear;
 	float attQuadratic;
+
+	float coneAngle;
+	vec3 coneDirection;
 };
 
 struct materialStruct
@@ -37,6 +40,9 @@ in vec3 vertex_In_Eye_Coordinates;
 in vec3 surface_Normal_To_Light_From_Vertex[numberOfLights];
 in vec2 ex_TexCoord;
 in float dist_From_Vertex_To_Light[numberOfLights];
+
+in float out_Attenuation[numberOfLights];
+
 layout(location = 0) out vec4 out_Color;
  
 void main(void) {
@@ -46,7 +52,6 @@ void main(void) {
 
 	vec4 tmp_Colour[numberOfLights];           // Vec4 array to hold the colours that will be added together into litColour
 	vec4 litColour[numberOfLights];			   // Litcolour will hold to total colour
-	float specificAttenuation[numberOfLights]; // Captures the attenuation specific to the particular light being iterated through in the array.
 
 	vec4 totalLitColours=vec4(0.0f,0.0f,0.0f,0.0f); // Holds to total colour of all lights in the scene.
 
@@ -67,14 +72,10 @@ void main(void) {
 		vec4 specularI = light[i].specular * material.specular;
 		specularI = specularI * pow(max(dot(R,vertex_In_Eye_Coordinates),0), material.shininess);
 
-		// Attenuation Calculation
-		float attenuation = light[i].attConst + light[i].attLinear * dist_From_Vertex_To_Light[i] + 
-		light[i].attQuadratic * dist_From_Vertex_To_Light[i] * dist_From_Vertex_To_Light[i];
-
-		// Lit colout being calculated
+		// Lit colour being calculated
 		tmp_Colour[i] = (diffuseI + specularI);
 		//attenuation does not affect ambient light
-		litColour[i] = ambientI + vec4((tmp_Colour[i].rgb / attenuation), 1.0);
+		litColour[i] = ambientI + vec4((tmp_Colour[i].rgb / out_Attenuation[i]), 1.0);
 
 		totalLitColours += (litColour[i]/2);
 	}

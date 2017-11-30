@@ -22,7 +22,8 @@ SceneObjects::SceneObjects(vec3 objectPosition, vec3 objectScale, char * texture
 	vector<GLfloat> norms;
 	vector<GLfloat> tex_coords;
 	vector<GLuint> indices;
-	rt3d::loadObj("./Assets/cube.obj", verts, norms, tex_coords, indices);
+
+	rt3d::loadObj("./Assets/Objs/cube.obj", verts, norms, tex_coords, indices);
 	GLuint size = indices.size();
 	meshIndexCount = size;
 	meshObject = rt3d::createMesh(verts.size() / 3, verts.data(), nullptr, norms.data(), tex_coords.data(), size, indices.data());
@@ -47,7 +48,9 @@ SceneObjects::SceneObjects(vec3 objectPosition, vec3 objectScale, char * texture
 	vector<GLfloat> norms;
 	vector<GLfloat> tex_coords;
 	vector<GLuint> indices;
-	rt3d::loadObj("./Assets/cube.obj", verts, norms, tex_coords, indices);
+
+	rt3d::loadObj("./Assets/Objs/cube.obj", verts, norms, tex_coords, indices);
+
 	GLuint size = indices.size();
 	meshIndexCount = size;
 	meshObject = rt3d::createMesh(verts.size() / 3, verts.data(), nullptr, norms.data(), tex_coords.data(), size, indices.data());
@@ -74,7 +77,9 @@ SceneObjects::SceneObjects(vec3 objectPosition, vec3 objectScale, GLfloat rotati
 	vector<GLfloat> norms;
 	vector<GLfloat> tex_coords;
 	vector<GLuint> indices;
-	rt3d::loadObj("./Assets/cube.obj", verts, norms, tex_coords, indices);
+
+	rt3d::loadObj("./Assets/Objs/cube.obj", verts, norms, tex_coords, indices);
+
 	GLuint size = indices.size();
 	meshIndexCount = size;
 	meshObject = rt3d::createMesh(verts.size() / 3, verts.data(), nullptr, norms.data(), tex_coords.data(), size, indices.data());
@@ -148,6 +153,7 @@ SceneObjects::SceneObjects(vec3 objectPosition, vec3 objectScale, GLfloat rotati
 	texture = util.loadBitmap(textureName);
 	texture2 = util.loadBitmap(textureName2);
 	texture3 = util.loadBitmap(textureName3);
+
 	vec3 p1 = vec3((objectPosition.x - objectScale.x), (objectPosition.y + objectScale.y), (objectPosition.z + objectScale.z));
 	// Sets the minimum coords for the bounding box
 	vec3 p2 = vec3((objectPosition.x + objectScale.x), (objectPosition.y - objectScale.y), (objectPosition.z - objectScale.z));
@@ -158,7 +164,9 @@ SceneObjects::SceneObjects(vec3 objectPosition, vec3 objectScale, GLfloat rotati
 	vector<GLfloat> norms;
 	vector<GLfloat> tex_coords;
 	vector<GLuint> indices;
-	rt3d::loadObj("./Assets/cube.obj", verts, norms, tex_coords, indices);
+
+	rt3d::loadObj("./Assets/Objs/cube.obj", verts, norms, tex_coords, indices);
+
 	GLuint size = indices.size();
 	meshIndexCount = size;                            //Dont think this is used
 
@@ -329,7 +337,8 @@ void SceneObjects::draw(stack<glm::mat4> passedStack, GLuint shaderProgram, mat4
 	mvStack.pop();
 }
 
-void SceneObjects::drawWithTwoLights(stack<glm::mat4> passedStack, GLuint shaderProgram, mat4 projectionMatrix, GLfloat rotation, rt3d::lightStruct light0, rt3d::lightStruct light1)
+
+void SceneObjects::drawWithTwoLights(stack<glm::mat4> passedStack, GLuint shaderProgram, mat4 projectionMatrix, GLfloat rotation, rt3d::lightStruct light0, rt3d::lightStruct light1, GLuint lightOn)
 {
 	//Sets the object into the stack
 	stack<glm::mat4> mvStack = passedStack;
@@ -344,13 +353,14 @@ void SceneObjects::drawWithTwoLights(stack<glm::mat4> passedStack, GLuint shader
 	mvStack.top() = glm::scale(mvStack.top(), objectSize);
 	//Rotates the cube first
 	rt3d::setUniformMatrix4fv(shaderProgram, "modelview", glm::value_ptr(mvStack.top()));
+	rt3d::setglUniform1i(shaderProgram, "lightOn", lightOn);
 	rt3d::setTwoLights(shaderProgram, light0, light1);
 	rt3d::setMaterial(shaderProgram, material);
 	rt3d::drawIndexedMesh(meshObject, meshIndexCount, GL_TRIANGLES);
 	mvStack.pop();
 }
 
-void SceneObjects::drawWithTwoTexturesAndTwoLights(stack<glm::mat4> passedStack, GLuint shaderProgram, mat4 projectionMatrix, bool twoTextures, int textureVisible, int specularValue, GLfloat rotation, rt3d::lightStruct light0, rt3d::lightStruct light1)
+void SceneObjects::drawWithTwoTexturesAndTwoLights(stack<glm::mat4> passedStack, GLuint shaderProgram, mat4 projectionMatrix, bool twoTextures, int textureVisible, int specularValue, GLfloat rotation, rt3d::lightStruct light0, rt3d::lightStruct light1, GLuint lightOn)
 {
 	stack<glm::mat4> mvStack = passedStack;
 	glUseProgram(shaderProgram); //use shader program for shading
@@ -379,6 +389,7 @@ void SceneObjects::drawWithTwoTexturesAndTwoLights(stack<glm::mat4> passedStack,
 	rt3d::setUniformMatrix4fv(shaderProgram, "modelview", glm::value_ptr(mvStack.top()));
 	rt3d::setglUniform1i(shaderProgram, "textureVisible", textureVisible);
 	rt3d::setglUniform1i(shaderProgram, "specularValue", specularValue);
+	rt3d::setglUniform1i(shaderProgram, "lightOn", lightOn);
 	// Passes i_texture_isvisible and texel_specular_value value as uniforms into the shaders to 
 	// allow for them to manipulate the scene inside the shader
 	rt3d::setTwoLights(shaderProgram, light0, light1);

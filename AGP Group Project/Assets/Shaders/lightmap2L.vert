@@ -3,8 +3,25 @@
 // Calculates and passes on V, L, N vectors for use in fragment shader, phong2.frag
 #version 330
 
+struct lightStruct
+{
+	vec4 ambient;
+	vec4 diffuse;
+	vec4 specular;
+	
+	float attConst;
+	float attLinear;
+	float attQuadratic;
+
+	float coneAngle;
+	vec3 coneDirection;
+};
+
 const int numberOfLights = 2;
 vec4 lightPosition[numberOfLights];
+lightStruct light[numberOfLights];
+uniform lightStruct light0;
+uniform lightStruct light1;
 
 uniform mat4 modelview;
 uniform mat4 projection;
@@ -22,13 +39,15 @@ out vec3 vertex_In_Eye_Coordinates;
 out vec3 surface_Normal_To_Light_From_Vertex[numberOfLights];
 
 out vec2 ex_TexCoord;
-
 out float dist_From_Vertex_To_Light[numberOfLights];
+out float out_Attenuation[numberOfLights];
 
 // multiply each vertex position by the MVP matrix
 // and find V, L, N vectors for the fragment shader
 void main(void) {
 
+	light[0] = light0;						   // Takes the uniforms from light0 and 1 and places them in the appropriate slot in the array.
+	light[1] = light1;
 	lightPosition[0] = light0Position;
 	lightPosition[1] = light1Position;
 
@@ -57,5 +76,16 @@ void main(void) {
 	
 		// Distance from the vertex to the light
 		dist_From_Vertex_To_Light[i] = distance(vertexPosition, lightPosition[i]);
+
+		// Attenuation Calculation
+		out_Attenuation[i] = light[i].attConst + light[i].attLinear * dist_From_Vertex_To_Light[i] + 
+		light[i].attQuadratic * dist_From_Vertex_To_Light[i] * dist_From_Vertex_To_Light[i];
+
+		//cone restrictions (affects attenuation)
+        float lightToSurfaceAngle = degrees(acos(dot(-surface_Normal_To_Light_From_Vertex[i], normalize(light[i].coneDirection))));
+        if(lightToSurfaceAngle > light[i].coneAngle)
+		{
+           light[i].attConst = 1.0;
+        }
 	}
 }

@@ -51,6 +51,7 @@
     <ClInclude Include="Game\Utilities\AABB.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+
     <ClInclude Include="FBO.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -58,6 +59,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="VBO.h">
+
+    <ClInclude Include="Game\ParticleArray.h">
+
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -106,6 +110,7 @@
     <None Include="Assets\Shaders\lightmap2L.vert">
       <Filter>Resource Files</Filter>
     </None>
+
     <None Include="Assets\Shaders\normalmap.frag">
       <Filter>Resource Files</Filter>
     </None>
@@ -128,6 +133,11 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Assets\Shaders\combined.vert">
+
+    <None Include="Assets\Shaders\particle.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Assets\Shaders\particle.vert">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
@@ -188,6 +198,7 @@
     <ClCompile Include="Game\Utilities\AABB.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+
     <ClCompile Include="FBO.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -195,6 +206,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="VBO.cpp">
+
+    <ClCompile Include="Game\ParticleArray.cpp">
+
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

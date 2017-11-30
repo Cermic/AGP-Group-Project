@@ -22,8 +22,11 @@ namespace rt3d {
 		GLfloat position[4];
 
 		float attConst;
-		float attLinear;
+		float attLinear;	// Attenuation variables
 		float attQuadratic;
+
+		float coneAngle;	// Spotlight variables
+		GLfloat coneDirection[3];
 	};
 
 	struct materialStruct {

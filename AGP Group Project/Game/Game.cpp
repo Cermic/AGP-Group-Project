@@ -20,6 +20,7 @@ Game::~Game()
 	delete[] skybox;
 	delete[] boxes[0];
 	delete[] boxes[1];
+
 	delete[] boxes[2];
 	delete[] boxes[3];
 	delete[] boxes[4];
@@ -35,6 +36,7 @@ Game::~Game()
 	delete[] boxes[14];
 	delete[] boxes[15];
 	delete[] boxes[16];
+
 
 
 	delete[] lightBox;
@@ -63,8 +65,12 @@ void Game::initialise()
 	//Skybox initialised and loaded.
 	skybox = new Skybox();
 	skybox->load();
+
 	//Initialise FBO for shadows
 	shadowFBO.generateShadowFBO();
+
+	particles = new ParticleArray(vec3(2.0f,2.0f,0.0f),1000,"Assets/Textures/water.bmp"); // Particles constructed
+
 
 	//initialise openGL to start depth testing and blend
 	glEnable(GL_DEPTH_TEST);
@@ -95,6 +101,7 @@ void Game::initialise()
 	boxes[15] = new SceneObjects(vec3( 20.0f, 11.0f,   0.0f), vec3( 4.0f, 10.0f,  4.0f), 0.0f, "Assets/Textures/MetalBox.bmp", "Assets/Textures/MetalBoxLightMapAdvanced.bmp", "Assets/Textures/bricknormal.bmp");
 
 	boxes[16] = new SceneObjects(vec3(-3.0f, 5.0f, -2.5f), vec3(1.0f, 1.0f, 1.0f), 1.0f, "Assets/Textures/MetalBox.bmp", "Assets/Textures/MetalBoxLightMapAdvanced.bmp", "Assets/Textures/metalbox-normal.bmp");
+
 
 	lightBox = new SceneObjects(light0->getLightPos(), vec3(0.25f, 0.25f, 0.25f), "Assets/Textures/MetalBox.bmp");
 	lightBox2 = new SceneObjects(light1->getLightPos(), vec3(0.25f, 0.25f, 0.25f), "Assets/Textures/MetalBox.bmp");
@@ -171,7 +178,8 @@ void Game::render(SDL_Window * window)
 	glm::mat4 modelview(1.0); // set base position for scene
 	mvStack.push(modelview); // modelview is pushed onto the stack to begin
 
-							 // Camera set
+	// Camera set
+
 	camera->setAt(util->moveForward(camera->getEyePos(), camera->getRotation(), 1.0f));
 	// lookat is updated
 	mat4 view = glm::lookAt(camera->getEyePos(), camera->getAt(), camera->getUp());
@@ -186,6 +194,7 @@ void Game::render(SDL_Window * window)
 	light1->draw(mvStack, util->getPhongTextureProgram(), util->getProjection(), light1->getAttenuationConstant()); // Left hand side light
 	// Draws a box which is loaded with lightmapping, two textures can be affected by rotation, attenuation and specular shininess changes.
 	// boxes[0] is the box on the RIGHT
+
 	boxes[0]->drawWithVariableTextures(mvStack, util->getCombinedTextureProgram(), util->getProjection(), 3, 0, 0, 0.0f, light0->getLight(), light1->getLight(), camera->getEyePos(), view); // This is the lightmapped box
 	// Draws a box which is loaded with regular phong lighting, one texture and can be affected by rotation and attenuation changes.																								
 	// boxes[1] is the box on the LEFT
@@ -211,7 +220,6 @@ void Game::render(SDL_Window * window)
 	boxes[15]->drawWithVariableTextures(mvStack, util->getCombinedTextureProgram(), util->getProjection(), 3, 0, 0, 0.0f, light0->getLight(), light1->getLight(), camera->getEyePos(), view);
 	boxes[16]->drawWithVariableTextures(mvStack, util->getCombinedTextureProgram(), util->getProjection(), 3, 0, 0, 0.0f, light0->getLight(), light1->getLight(), camera->getEyePos(), view);
 
-
 	// Draws a box around the light that simply follows it.
 	lightBox->draw(mvStack, util->getPhongTextureProgram(), util->getProjection(), 1.0f, light0->getLight()); // Small box on the right
 	lightBox2->draw(mvStack, util->getPhongTextureProgram(), util->getProjection(), 1.0f, light0->getLight()); // Small box on the left
@@ -219,6 +227,8 @@ void Game::render(SDL_Window * window)
 	hud->draw(mvStack, camera->getEyePos(), util->getShaderProgram());
 	//keys->draw(mvStack, util->getShaderProgram());
 	//nameWaterMark->draw(mvStack, util->getShaderProgram(), 9, vec3(0.8, 0.9, 0.0), vec3(0.2, 0.1, 0.0), { 255,255,255 });
+	// Particles drawn
+	particles->draw(mvStack, util->getParticleProgram(), util->getProjection());
 	mvStack.pop();
 	glDepthMask(GL_TRUE);
 	SDL_GL_SwapWindow(window); // swap buffers
@@ -259,6 +269,7 @@ void Game::InterSectionReaction(CPM_GLM_AABB_NS::AABB::INTERSECTION_TYPE interse
 			moveState = NOMOVEMENT;
 		}
 		cout << "Intersection" << endl;
+
 	}
 	if (intersectionType == CPM_GLM_AABB_NS::AABB::OUTSIDE)
 	{
@@ -278,6 +289,9 @@ void Game::update()
 	// Updates lightbox position based on the light
 	lightBox->update(light0->getLightPos(), 1.0f);
 	lightBox2->update(light1->getLightPos(), 1.0f);
+
+	particles->update();
+	// Particles updated
 
 	// boxes position and rotation updated.
 	if (keys[SDL_SCANCODE_3])
@@ -404,26 +418,32 @@ void Game::update()
 		if (keys[SDL_SCANCODE_KP_3])
 		{
 			light0->setLightPos(light0->getLightPos() + vec4(0.0f, 0.0f, 0.1f, 0.0f));
+			light0->setConeDirection(light0->getConeDirection() + vec3(0.0f, 0.0f, 0.1f));
 		}
 		if (keys[SDL_SCANCODE_KP_9])
 		{
 			light0->setLightPos(light0->getLightPos() - vec4(0.0f, 0.0f, 0.1f, 0.0f));
+			light0->setConeDirection(light0->getConeDirection() - vec3(0.0f, 0.0f, 0.1f));
 		}
 		if (keys[SDL_SCANCODE_KP_8])
 		{
 			light0->setLightPos(light0->getLightPos() + vec4(0.0f, 0.1f, 0.0f, 0.0f));
+			light0->setConeDirection(light0->getConeDirection() + vec3(0.0f, 0.1f, 0.0f));
 		}
 		if (keys[SDL_SCANCODE_KP_2])
 		{
 			light0->setLightPos(light0->getLightPos() - vec4(0.0f, 0.1f, 0.0f, 0.0f));
+			light0->setConeDirection(light0->getConeDirection() - vec3(0.0f, 0.1f, 0.0f));
 		}
 		if (keys[SDL_SCANCODE_KP_4])
 		{
 			light0->setLightPos(light0->getLightPos() - vec4(0.1f, 0.0f, 0.0f, 0.0f));
+			light0->setConeDirection(light0->getConeDirection() - vec3(0.1f, 0.0f, 0.0f));
 		}
 		if (keys[SDL_SCANCODE_KP_6])
 		{
 			light0->setLightPos(light0->getLightPos() + vec4(0.1f, 0.0f, 0.0f, 0.0f));
+			light0->setConeDirection(light0->getConeDirection() + vec3(0.1f, 0.0f, 0.0f));
 		}
 	}
 	else
@@ -453,6 +473,17 @@ void Game::update()
 		{
 			light1->setLightPos(light1->getLightPos() + vec4(0.1f, 0.0f, 0.0f, 0.0f));
 		}
+  }
+
+	if (keys[SDL_SCANCODE_O])
+	{
+		boxes[0]->setLightOn(1);
+		boxes[1]->setLightOn(1);
+	}
+	if (keys[SDL_SCANCODE_P])
+	{
+		boxes[0]->setLightOn(0);
+		boxes[1]->setLightOn(0);
 
 	}
 	// Draws scene in poly only mode - no textures

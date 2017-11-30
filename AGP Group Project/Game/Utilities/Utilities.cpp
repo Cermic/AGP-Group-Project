@@ -152,6 +152,9 @@ void Utilities::loadUtilities()
 
 		shaderProgram = rt3d::initShaders("Assets/Shaders/textured.vert", "Assets/Shaders/textured.frag");
 		//shaderProgram setup - uses no lighting or material so that the skybox stays 100% lit.
+
+		particleProgram = rt3d::initShaders("Assets/Shaders/particle.vert", "Assets/Shaders/particle.frag");
+		// particleProgram setup
 	}
 
 

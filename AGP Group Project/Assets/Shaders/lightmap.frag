@@ -13,6 +13,9 @@ struct lightStruct
 	float attConst;
 	float attLinear;
 	float attQuadratic;
+	
+	float coneAngle;
+	vec3 coneDirection;
 };
 
 struct materialStruct
@@ -37,11 +40,14 @@ uniform sampler2D ambient;
 uniform sampler2D diffuse;
 uniform sampler2D speuclar;
 
-in vec3 ex_N;
-in vec3 ex_V;
-in vec3 ex_L;
+in vec3 surface_Normal_To_Eye_From_Vertex;
+in vec3 vertex_In_Eye_Coordinates;
+in vec3 surface_Normal_To_Light_From_Vertex;
 in vec2 ex_TexCoord;
-in float ex_D;
+in float dist_From_Vertex_To_Light;
+
+in float out_Attenuation;
+
 layout(location = 0) out vec4 out_Color;	// shouldn't this be location = 1?
  
 void main(void) {
@@ -50,17 +56,19 @@ void main(void) {
 	vec4 ambient = light.ambient ;
 
 	// Diffuse 
-	float diffuseI = max(dot(normalize(ex_N),normalize(ex_L)),0);
+	float diffuseI = max(dot(normalize(surface_Normal_To_Eye_From_Vertex),
+		normalize(surface_Normal_To_Light_From_Vertex)),0);
 	vec4 diffuse = light.diffuse * diffuseI  * texture(textureUnit1, ex_TexCoord).r;  
 	// red component = brightness or intensity of the diffuse
 	// The diffuse intensity is given by the r(red) value of textureUnit1 at the relevant coordindate for the pixel.
 
 	// Specular 
 	// Calculate R - reflection of light
-	vec3 R = normalize(reflect(normalize(-ex_L),normalize(ex_N)));
+	vec3 R = normalize(reflect(normalize(-surface_Normal_To_Light_From_Vertex),
+		normalize(surface_Normal_To_Eye_From_Vertex)));
 
 	// texture g(green) component is shininess
-	float f_texel1_spec_shininess = pow(max(dot(R,ex_V),0), texture(textureUnit1, ex_TexCoord).g); 
+	float f_texel1_spec_shininess = pow(max(dot(R,vertex_In_Eye_Coordinates),0), texture(textureUnit1, ex_TexCoord).g); 
 	// The shininess is given by the g(green) value of textureUnit1 at the relevant coordindate for the pixel.
 	// This is how the shader can create a variance in shininess. It's measuring the green value per pixel, not over the whole texture.
 	
@@ -69,11 +77,10 @@ void main(void) {
 	// blue component of the texture is the specular intensity
 	// The speuclar intensity is given by the b(blue) value of textureUnit1 at the relevant coordindate for the pixel.
 
-	// Attenuation //
-	float attenuation = light.attConst + light.attLinear * ex_D + light.attQuadratic * ex_D * ex_D;
+	// Litcolour calculation
 	vec4 tmp_Color = ((diffuse) + (specular)); // Can change the specular here to exagerate the effect.
 	//attenuation does not affect ambient light
-	vec4 litColour = ambient+vec4(tmp_Color.rgb / attenuation, 1.0);
+	vec4 litColour = ambient+vec4(tmp_Color.rgb / out_Attenuation, 1.0);
 
 	// Fragment colour //
 	
