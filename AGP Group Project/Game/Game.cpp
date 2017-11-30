@@ -146,8 +146,8 @@ void Game::renderWithShadows(SDL_Window * window) {// Example for incomplete imp
 		// Draws the scene lights that apply to all objects with Phong shader as default for the lightmapped box
 		light0->draw(mvStack, util->getShadowProgram(), util->getProjection(), light0->getAttenuationConstant()); // Right hand side light
 		light1->draw(mvStack, util->getShadowProgram(), util->getProjection(), light1->getAttenuationConstant()); // Left hand side light
-		boxes[0]->drawWithTwoTexturesAndTwoLights(mvStack, util->getShadowProgram(), util->getProjection(), true, boxes[0]->getTextureVisible(), boxes[0]->getSpecularValue(), boxes[0]->getRotation() + 0.1f, light0->getLight(), light1->getLight()); // This is the lightmapped box
-		boxes[1]->drawWithTwoLights(mvStack, util->getShadowProgram(), util->getProjection(), boxes[1]->getRotation() + 0.1f, light0->getLight(), light1->getLight());
+		boxes[0]->drawWithTwoTexturesAndTwoLights(mvStack, util->getShadowProgram(), util->getProjection(), true, boxes[0]->getTextureVisible(), boxes[0]->getSpecularValue(), boxes[0]->getRotation() + 0.1f, light0->getLight(), light1->getLight(),1); // This is the lightmapped box
+		boxes[1]->drawWithTwoLights(mvStack, util->getShadowProgram(), util->getProjection(), boxes[1]->getRotation() + 0.1f, light0->getLight(), light1->getLight(),1);
 		// Draws a box around the light that simply follows it.
 		lightBox->draw(mvStack, util->getShadowProgram(), util->getProjection(), 1.0f, light0->getLight()); // Small box on the right
 		lightBox2->draw(mvStack, util->getShadowProgram(), util->getProjection(), 1.0f, light0->getLight()); // Small box on the left
@@ -195,11 +195,13 @@ void Game::render(SDL_Window * window)
 	// Draws a box which is loaded with lightmapping, two textures can be affected by rotation, attenuation and specular shininess changes.
 	// boxes[0] is the box on the RIGHT
 
-	boxes[0]->drawWithVariableTextures(mvStack, util->getCombinedTextureProgram(), util->getProjection(), 3, 0, 0, 0.0f, light0->getLight(), light1->getLight(), camera->getEyePos(), view); // This is the lightmapped box
+	//boxes[0]->drawWithVariableTextures(mvStack, util->getCombinedTextureProgram(), util->getProjection(), 3, 1, 0, 0.0f, light0->getLight(), light1->getLight(), camera->getEyePos(), view); // This is the lightmapped box
 	// Draws a box which is loaded with regular phong lighting, one texture and can be affected by rotation and attenuation changes.																								
+	boxes[0]->drawWithTwoTexturesAndTwoLights(mvStack, util->getLightMap2LProgram(), util->getProjection(), true, boxes[0]->getTextureVisible(), boxes[0]->getSpecularValue(), boxes[0]->getRotation(), light0->getLight(), light1->getLight(), 1);
+	boxes[1]->drawWithTwoTexturesAndTwoLights(mvStack, util->getLightMap2LProgram(), util->getProjection(), true, boxes[0]->getTextureVisible(), boxes[0]->getSpecularValue(), boxes[0]->getRotation(), light0->getLight(), light1->getLight(), 1);
 	// boxes[1] is the box on the LEFT
 	//boxes[1]->draw(mvStack, util->getPhongTextureProgram(), util->getProjection(), boxes[1]->getRotation() + 0.1f, light1->getLight());
-	boxes[1]->drawWithVariableTextures(mvStack, util->getCombinedTextureProgram(), util->getProjection(), 3, 0, 0, 0.0f, light0->getLight(), light1->getLight(), camera->getEyePos(), view);
+	//boxes[1]->drawWithVariableTextures(mvStack, util->getCombinedTextureProgram(), util->getProjection(), 3, 0, 0, 0.0f, light0->getLight(), light1->getLight(), camera->getEyePos(), view);
 
 
 	//boxes[2]->drawWithVariableTextures(mvStack, util->getCombinedTextureProgram(), util->getProjection(), 3, 0, 0, 0.0f, light0->getLight(), light1->getLight(), view);

@@ -78,15 +78,10 @@ public:
 						   rt3d::lightStruct light0, rt3d::lightStruct light1, GLuint lightOn);
 
 
-	void drawWithTwoTexturesAndTwoLights(stack<glm::mat4> mvStack, GLuint shaderProgram, mat4 projectionMatrix, bool twoTextures, 
-										int textureVisible, int specularValue, GLfloat rotation, 
-
-										rt3d::lightStruct light, rt3d::lightStruct light2);
+	void drawWithTwoTexturesAndTwoLights(stack<glm::mat4> passedStack, GLuint shaderProgram, mat4 projectionMatrix, bool twoTextures, int textureVisible, int specularValue, GLfloat rotation, rt3d::lightStruct light0, rt3d::lightStruct light1, GLuint lightOn);
 
 	void drawWithVariableTextures(stack<glm::mat4> passedStack, GLuint shaderProgram, mat4 projectionMatrix, int texturesCount, int textureVisible, int specularValue, GLfloat rotation, rt3d::lightStruct light0, rt3d::lightStruct light1, vec3 eye, mat4 view);
 		// Updates position and rotation
-
-										rt3d::lightStruct light, rt3d::lightStruct light2, GLuint lightOn);
 
 	void update(vec3 objectPosition, GLfloat rotation);
 
