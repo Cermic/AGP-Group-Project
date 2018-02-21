@@ -74,6 +74,7 @@ _Chutzpah*
 
 # Visual C++ cache files
 ipch/
+*.ipch
 *.aps
 *.ncb
 *.opendb
